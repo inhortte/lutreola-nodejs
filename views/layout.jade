@@ -1,0 +1,41 @@
+doctype 5
+html
+  head
+    res.render('head');
+  body
+    .container
+      #header.span-24.round
+        #estonian_flag
+          a#flag_ee(href = "#")
+            img(width = "28", src = "/images/ee_flag.gif")
+        #english_flag
+          %a{:id => "flag_en", :href => "#"}
+            %img{:width => "28", :src => "/images/en_flag.gif"}
+        #search
+          = haml :search
+        #menu
+          - if admin_page?
+            = haml :"admin/options"
+          - else
+            = haml :options
+        %br.clear
+      %br.clear
+      %br.clear
+      %div{:id => "subheader", :class => "span-24 round"}
+        #breadcrumbs.round
+          = haml :breadcrumbs
+        #login.round
+          - if get_member
+            = "Tere, #{get_member.username}"
+            %a{:href => '/member/logout'} (logout)
+            - if admin? && !admin_page?
+              %a{:href => '/admin'} (admin)
+          - else
+            %a{:href => '/member/signup'} Signup
+            %a{:href => '/member/login'} Login
+      %br.clear
+      %br.clear
+      %br.clear
+      %br.clear
+      %br.clear
+      %br.clear
