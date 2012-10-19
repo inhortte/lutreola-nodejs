@@ -1,0 +1,86 @@
+doctype 5
+html
+  head
+    include head
+  body
+    .container
+      #header.span-24.round
+        #estonian_flag
+          a#flag_ee(href = "#")
+            img(width = "28", src = "/images/ee_flag.gif")
+        #english_flag
+          a(id = "flag_en", href = "#")
+            img(width = "28", src = "/images/en_flag.gif")
+        #search
+          include search
+        #menu
+          if admin_page()
+            include admin/options
+          else
+            include options
+        br.clear
+      br.clear
+      br.clear
+      #subheader.span-24.round
+        #breadcrumbs.round
+          include breadcrumbs
+        #login.round
+          if get_member()
+            | Tere, #{get_member().username}
+            a(:href = '/member/logout') (logout)
+            if admin() && !admin_page()
+              a(href = '/admin') (admin)
+          else
+            a(href = '/member/signup') Signup
+            a(href = '/member/login') Login
+      br.clear
+      br.clear
+      br.clear
+      br.clear
+      br.clear
+      br.clear
+
+      #necropolis.span-24.round
+        if admin_page()
+          .span-23.last
+            .hlavni
+              #flash
+                include flash
+              #content
+                != body
+        else if gallery_page()
+          .span-23.last.nopad
+            .hlavni
+              include collections
+            .gallery
+              != body
+        else
+          .span-13.left
+            .hlavni.nopad
+              include top_left
+            .span-6.left
+              .hlavni.nopad
+                include middle_left_one
+              .hlavni.nopad
+                include bottom_left_one
+            .span-6.right.last
+              .hlavni.nopad
+                include middle_left_two
+              .hlavni
+                if get_member()
+                  | Logged in: #{get_member().username}
+                  br
+                  a(href = '/member/logout')
+                    | logout
+          .span-10.right.last
+            .hlavni
+              #flash
+                include flash
+              #content
+                != body
+            #twitter.hlavni
+              //- include twitter                                                            | Twitter / Facebook
+
+        br.clear
+        #footer.span-4
+          include footer
