@@ -1,53 +1,38 @@
-
-/**
- * Module dependencies.
- */
-
 var express = require('express')
+  , stylus = require('stylus')
+  , nib = require('nib')
   , routes = require('./routes')
-  , user = require('./routes/user')
-  , http = require('http')
-  , path = require('path');
+//  , everyauth = require('everyauth')
+  , mongoose = require('mongoose')
+  , async = require('async')
+//  , mongooseAuth = require('mongoose-auth-latest');
 
-var app = express();
+app = module.exports = express();
+app.mongoose = mongoose;
+// app.mongooseAuth = mongooseAuth;
+app.stylus = stylus;
+app.nib = nib;
+app.async = async;
+// app.everyauth = everyauth;
+// Apprarently, this is depreciated.
+// everyauth.helpExpress(app); 
 
-function logErrors(err, req, res, next) {
-  console.error(err.stack);
-  next(err);
-}
+var config = require('./config.js')(app, express, mongoose, stylus, nib);
+app.models = {}
+app.models.thurk = require('./models/thurk')(mongoose).model
+// app.models.user = require('./models/user')(mongoose, mongooseAuth).model
+app.models.member = require('./models/member')(mongoose).model
+app.models.entry_menu = require('./models/entry_menu.js')(mongoose).model
+app.models.menu = require('./models/menu.js')(mongoose).model
+app.models.entry = require('./models/entry.js')(mongoose).model
 
-function clientErrorHandler(err, req, res, next) {
-  if (req.xhr) {
-    res.send(500, { error: 'Something blew up!' });
-  } else {
-    next(err);
-  }
-}
-
-app.configure(function(){
-  app.set('port', process.env.PORT || 3000);
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
-  app.use(express.favicon());
-  app.use(express.logger('dev'));
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(express.cookieParser('your secret here'));
-  app.use(express.session());
-  app.use(app.router);
-  app.use(require('stylus').middleware(__dirname + '/public'));
-  app.use(express.static(path.join(__dirname, 'public')));
-});
-
-app.configure('development', function(){
-  app.use(logErrors);
-  app.use(clientErrorHandler);
-  app.use(express.errorHandler());
-});
+// routes
 
 app.get('/', routes.index);
-app.get('/users', user.list);
-
-http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
+/*
+app.get('/logout', function(req, res) {
+  req.logout();
+  res.redirect('/');
 });
+*/
+app.listen(app.get('port'));

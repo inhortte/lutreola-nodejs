@@ -1,0 +1,55 @@
+module.exports = function(app, express) {
+
+  var config = this;
+
+  app.requireAuth = false;
+
+  //configure everyauth
+  /*
+  app.everyauth.debug = true;
+  app.everyauth.twitter
+     .consumerKey('tquSIHqPE7mfAn1YeA43bg')
+     .consumerSecret('V7wbE8xccMmdQPK7AkuZdp9leDXjLFCGb8jKM4')
+     .findOrCreateUser(function(session, accessToken, accessTokenSecret, twitUser) {
+       // promise = @.Promise().fulfill user
+       return twitUser.id;
+  }).redirectPath('/');
+  */
+
+  app.configure(function() {
+    app.set('port', process.env.PORT || 3000);
+    app.set('views', __dirname + '/views');
+    app.set('view engine', 'jade');
+    app.use(express.favicon());
+    app.use(express.bodyParser());
+    app.use(express.methodOverride());
+    app.use(express.cookieParser());
+    app.use(express.session({ secret: 'flavigula' }));
+    //app.use(app.mongooseAuth.middleware());
+    // app.use(app.everyauth.middleware(app));
+    // app.use(app.router);
+    app.use(app.stylus.middleware(
+      { src: __dirname + '/public'
+	, compile: function(str, path) {
+	  return app.stylus(str).set('filename', path).use(app.nib());
+	}
+      }
+    ));
+    app.use(express.static(__dirname + '/public'));
+  });
+
+  //env specific config
+  app.configure('development', function(){
+    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+
+    app.mongoose.connect('mongodb://localhost/naaritsad');
+  });
+
+  app.configure('production', function(){
+    app.use(express.errorHandler());
+
+    app.mongoose.connect('mongodb://localhost/naaritsad');
+  });
+
+  return config;
+};

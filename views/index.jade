@@ -1,5 +1,7 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h2 Is that a rodent up your nose?
+    each t in thurk
+      li #{t.genus} #{t.species}
+        

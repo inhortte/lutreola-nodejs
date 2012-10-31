@@ -16,21 +16,52 @@ html
         #menu
           include options
         br.clear
+        br.clear
       br.clear
       br.clear
       #subheader.span-24.round
         #breadcrumbs.round
           include breadcrumbs
         #login.round
-      br.clear
-      br.clear
-      br.clear
-      br.clear
-      br.clear
-      br.clear
+          - if(false)
+            | Welcome
+            | &nbsp; | &nbsp;
+            a(href = '#') logout
+          - else
+            a(href = '/member/signup') signup
+            | &nbsp; | &nbsp;
+            a(href = '#') login
+            | &nbsp; | &nbsp;            
+            a(href = '#') twitter login
+            | &nbsp; | &nbsp;
+            a(href = '#') facebook login
 
       #necropolis.span-24.round
-        block content
+        .span-13.left
+          .hlavni.nopad
+            include top_left
+          .span-6.left
+            .hlavni.nopad
+              include middle_left_one
+            .hlavni.nopad
+              include bottom_left_one
+          .span-6.right.last
+            .hlavni.nopad
+              include middle_left_two
+            .hlavni
+              - if(false)
+                | may or may not be logged in
+              - else
+                | No one is definitely logged in
+        .span-10.right.last
+          .hlavni
+            #flash
+              | Flash goes here
+            #content
+              p= title
+              block content
+          #twitter.hlavni
+            | Twitter / Facebook
         br.clear
         #footer.span-4
           include footer

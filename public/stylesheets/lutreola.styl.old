@@ -1,0 +1,381 @@
+/*
+ * Import nib
+ */
+@import 'nib'
+
+/*
+ * Grab a custom font from Google
+ */
+@import url('http://fonts.googleapis.com/css?family=Quicksand')
+
+/*
+ * Nib provides a CSS reset
+ */
+global-reset()
+
+/*
+body-font-family = 'Georgia'
+header-font-family = 'Quicksand'
+font-size = 14px
+menu-font-size = 12px
+footer-font-size = 10px
+body-bg-color = #333
+body-text-color = #ccc
+link-color = #f8de08
+heading-color = #568025
+header-bg-color = #eee
+hlavni-bg-color = #333
+breadcrumb-bg-color = #333
+menu-hover-bg-color = brown
+menu-hover-color = green
+hlavni-border-color = #4ac
+
+body
+	font-family body-font-family
+	font-size font-size
+	background-image url('/images/lutreola_27.jpg')
+	background-color body-bg-color
+  color body-text-color
+  margin 0 0 0 0
+
+a
+  &:link
+    color link-color
+    text-decoration none
+  &:visited
+    color link-color
+  &:hover
+    text-decoration underline
+
+img
+  border 0
+
+h1, h2, h3, h4, h5, h6
+  color heading-color
+  margin-bottom 0
+
+#main
+  width 100%
+  margin-left auto
+	margin-right auto
+	margin-bottom 0
+	margin-top 0
+
+#home_content
+  img
+    float left
+    margin 0
+  #footer
+    width 96%
+    color #fff
+
+#header
+  background-color header-bg-color
+  position relative
+  width 98.5%
+  border solid 0px #630
+  padding-bottom 20px
+  margin-top -5px
+
+#subheader
+  filter unquote('progid:DXImageTransform.Microsoft.gradient(startColorstr=#cccccc00, endColorstr=#cccccc00)')
+  -ms-filter progid:DXImageTransform.Microsoft.gradient(startColorstr=#cccccc00, endColorstr=#cccccc00)
+  background -webkit-gradient(linear, left top, left bottom, from(rgba(204, 204, 204, 0)), to(rgba(204, 204, 204, 0)))
+  background -moz-linear-gradient(rgba(204, 204, 204, 0) 0%,  rgba(204, 204, 204, 0) 100%)
+  position relative
+  width 98.5%
+  border solid 0px #630
+  padding-bottom 20px
+  margin-top -15px
+  font-size menu-font-size
+  color heading-color
+  a
+    color heading-color
+  #breadcrumbs
+    float left
+    padding 5px 10px 2px 10px
+    background-color header-bg-color
+  #login
+    float right
+    padding 5px 10px 2px 10px
+    background-color header-bg-color
+
+#pagetitle
+  float right
+  font-family "Arial Black"
+	font-weight bold
+	font-size 16px
+  color #2a5
+  padding-right 10px
+
+#footer
+  font-family "Helvetica"
+	font-size footer-font-size
+  color body-text-color
+  padding 5px
+  width 100%
+  #left
+    float left
+    padding-right 20px
+  #right
+    float right
+
+#header_mink
+  position absolute
+  top 7px
+  left 50px
+
+#estonian_flag
+  position absolute
+  top 14px
+  right 10px
+
+#english_flag
+  position absolute
+  top 15px
+  right 50px
+
+#search
+  position absolute
+  top 5px
+  right 100px
+  font-size menu-font-size
+  :color heading-color
+  #text
+    display inline
+    margin-top 4px
+		margin-right 5px
+  #submit
+    width 20px
+    margin-left -5px
+
+#menu
+  position absolute
+  top 0px // This must echo #dropdown. The whole header is -5px vertical.
+  left 10px
+
+#necropolis
+  filter unquote('progid:DXImageTransform.Microsoft.gradient(startColorstr=#352b2100, endColorstr=#352b21ff)')
+  -ms-filter progid:DXImageTransform.Microsoft.gradient(startColorstr=#352b2100, endColorstr=#352b21ff)
+  background -webkit-gradient(linear, left top, left bottom, from(rgba(53, 43, 33, 0)), to(rgba(53, 43, 33, 1)))
+  background -moz-linear-gradient(rgba(53, 43, 33, 0) 0%,  rgba(53, 43, 33, 1) 100%)
+  padding 10px
+  width 97%
+  #left
+    float left
+  #right
+    float left
+  .slim
+    width 97.5%
+  .slimmer
+    width 85%
+
+#lutreola_help, #gallery_img_link, .misc_photo_link
+  img
+    width 100%
+
+.hlavni
+  background-color hlavni-bg-color
+  color body-text-color
+  border 2px solid hlavni-border-color
+  padding 10px 10px 10px 10px
+  margin-bottom 10px
+
+#gallery
+  filter unquote('progid:DXImageTransform.Microsoft.gradient(startColorstr=#cccccc00, endColorstr=#cccccc00)')
+  -ms-filter progid:DXImageTransform.Microsoft.gradient(startColorstr=#cccccc00, endColorstr=#cccccc00)
+  background -webkit-gradient(linear, left top, left bottom, from(rgba(204, 204, 204, 0)), to(rgba(204, 204, 204, 0)))
+  background -moz-linear-gradient(rgba(204, 204, 204, 0) 0%,  rgba(204, 204, 204, 0) 100%)
+  padding 0
+  margin-bottom 10px
+
+#collections
+  padding 0
+  margin 0
+  .coll_link
+    display inline
+    margin 0 10px 0 0
+
+.nopad
+  padding 0
+
+.clear
+  clear both
+
+.round
+  -moz-border-radius 8px
+  -webkit-border-radius 8px
+  border-radius 8px
+
+.bottomround
+  -moz-border-radius 10px
+  -webkit-border-radius 10px
+  border-radius 10px
+
+#select_menus, #select_collections
+  width 100%
+  #select_box
+    float left
+  #instructions
+    float left
+    padding-top 20px
+		padding-left 20px
+		padding-right 20px
+  #menu_titles_div, #collection_names_div
+    float left
+    padding-top 10px
+    .menu_name
+      padding-right 10px
+#photo_thumb
+  img
+    padding-right 20px
+    align texttop
+  #image
+    float left
+  #input
+    float left
+
+#entry_menus
+  ul
+    list-style-type none
+    margin 0
+    padding 0
+    width 60%
+    li
+      margin 0 3px 3px 3px
+      padding 5px 0 0 15px
+      font-size 12px
+      height 18px
+      span
+        position absolute
+        margin-left -1.3em
+
+#collection_photos
+  ul
+    list-style-type none
+    margin 0
+    width 100%
+    li
+      float left
+      padding 5px
+
+.coll_tab
+  button
+    margin 0
+    padding 0
+    width 15px
+  .count
+    display inline
+    font-size smaller
+		margin-top 15px
+.photo_item
+  float left
+  padding 5px
+  .name
+    float left
+  .delete
+    float right
+    button
+      margin 0
+      padding 0
+      width 15px
+          
+#flash
+  font-weight bold
+	font-size smaller
+  color #b00
+  padding-bottom 20px
+
+#dropdown
+  margin-right 0
+	margin-left 0
+	margin-top 5px
+  ul
+    list-style none
+    margin 0
+    padding 0
+  a, h2
+    font-family "Verdana"
+		font-size menu-font-size
+    display block
+    border-width 0
+		border-style solid
+		border-color #ccc
+    margin 0
+  h2
+    color black
+    background-color header-bg-color
+    font-size 70%
+		font-weight normal
+  a
+    color black
+    background-color header-bg-color
+    text-decoration none
+    padding 10px 10px 5px 10px
+    &:hover
+      background-color menu-hover-bg-color
+      color menu-hover-color
+  li.inline
+    float left
+    z-index 100
+  li
+    position relative
+  ul
+    ul
+      background-color header-bg-color
+      position absolute
+			bottom 100%
+			left 0
+      display none
+      a
+        background
+          color header-bg-color
+      ul
+        position absolute
+        top 0
+        left 100%
+        width 100%
+        margin-left 0
+    li:hover
+      ul
+        display block
+        width 200%
+        ul
+          display none
+      li:hover
+        ul
+          display block
+          width 100%
+
+#twitter
+  height 150px
+  overflow auto
+#tweets
+  .tweet
+    img
+      float left
+      width 30px
+    .text
+      width 80%
+      float right
+      color body-text-color
+      font-size footer-font-size
+
+#photo_gallery
+  .thumbnail
+    float left
+    padding-right 15px
+
+#popup_photo
+  position absolute
+  background-color #aaa
+  padding 20px
+  display none
+  top 100px
+  margin-left auto
+	margin-right auto
+  width 500px
+  border 1px solid #000
+  #current_photo
+    position relative
+    width 500px

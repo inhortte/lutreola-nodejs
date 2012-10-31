@@ -1,0 +1,14 @@
+#dropdown
+  ul
+    //-
+      each me in get_menu_options(#{menu.id})
+        li.inline
+          h2
+            a(href => #{me[1]})
+              = #{me[0]}
+          if #{me[2]}
+            ul
+              each me_dd in get_menu_options(#{me[2].id})
+                li
+                  a(href => #{me_dd[1]})
+                    = #{me_dd[0]}

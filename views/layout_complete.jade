@@ -25,14 +25,18 @@ html
         #breadcrumbs.round
           include breadcrumbs
         #login.round
-          if get_member()
-            | Tere, #{get_member().username}
-            a(:href = '/member/logout') (logout)
-            if admin() && !admin_page()
-              a(href = '/admin') (admin)
-          else
-            a(href = '/member/signup') Signup
-            a(href = '/member/login') Login
+          - if(everyauth.loggedIn)
+            | Welcome #{everyauth.twitter.user.screen_name}
+            | &nbsp; | &nbsp;
+            a(href = '/logout') logout
+          - else
+            a(href = '/member/signup') signup
+            | &nbsp; | &nbsp;
+            a(href = '/member/login') login
+            | &nbsp; | &nbsp;            
+            a(href = '/auth/twitter') twitter login
+            | &nbsp; | &nbsp;
+            a(href = '/auth/facebook') facebook login
       br.clear
       br.clear
       br.clear
@@ -67,11 +71,10 @@ html
               .hlavni.nopad
                 include middle_left_two
               .hlavni
-                if get_member()
-                  | Logged in: #{get_member().username}
-                  br
-                  a(href = '/member/logout')
-                    | logout
+              - if(everyauth.loggedIn)
+                | #{everyauth.twitter.user.screen_name} may or may not be logged in
+              - else
+                | No one is definitely logged in
           .span-10.right.last
             .hlavni
               #flash
