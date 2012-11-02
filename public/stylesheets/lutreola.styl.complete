@@ -302,25 +302,24 @@ h1, h2, h3, h4, h5, h6
   padding-bottom 20px
 
 #dropdown
-  margin-right 0
+	margin-right 0
 	margin-left 0
 	margin-top 5px
+
+#dropdown
   ul
     list-style none
-    margin 0
-    padding 0
+    margin 0px
+    padding 0px
   a, h2
-    font-family "Verdana"
 		font-size menu-font-size
     display block
-    border-width 0
-		border-style solid
-		border-color #ccc
+		border solid 0 #ccc
     margin 0
   h2
     color black
     background-color header-bg-color
-    font-size 70%
+    font-size 100%
 		font-weight normal
   a
     color black
@@ -339,12 +338,9 @@ h1, h2, h3, h4, h5, h6
     ul
       background-color header-bg-color
       position absolute
-			bottom 100%
-			left 0
       display none
       a
-        background
-          color header-bg-color
+        background-color header-bg-color
       ul
         position absolute
         top 0
@@ -355,6 +351,7 @@ h1, h2, h3, h4, h5, h6
       ul
         display block
         width 200%
+			ul
         ul
           display none
       li:hover

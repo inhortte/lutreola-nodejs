@@ -167,7 +167,6 @@ margin-right auto {
   width: 98.5%;
   border: solid 0px #630;
   padding-bottom: 20px;
-  margin-top: -5px;
 }
 #subheader {
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(204,204,204,0)), color-stop(1, rgba(204,204,204,0)));
@@ -255,7 +254,7 @@ font-size footer-font-size #right {
 }
 #menu {
   position: absolute;
-  top: 20px;
+  top: 5px;
   left: 10px;
 }
 font-size larger,
@@ -313,72 +312,71 @@ font-size larger,
   -webkit-border-radius: 10px;
   border-radius: 10px;
 }
-#dropdown {
-  a: , h2;
-  border-style: solid;
-  font-weight: normal;
-}
 #dropdown ul {
-  list-style: none;
-  margin: 0px;
-  padding: 0px;
-}
-#dropdown font-size menu-font-size {
-  display: block;
-  border-width: 0;
-}
-#dropdown border-color #ccc {
-  margin: 0;
-}
-#dropdown h2 {
-  color: #000;
-  background-color: #eee;
-  font-size: 100%;
-}
-#dropdown a {
-  color: #000;
-  background-color: #eee;
-  text-decoration: none;
-  padding: 10px 10px 5px 10px;
-}
-#dropdown a:hover {
-  background-color: #a52a2a;
-  color: #008000;
-}
-#dropdown li.inline {
-  float: left;
-  z-index: 100;
-}
-#dropdown li {
-  position: relative;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(239,239,239,0)), color-stop(1, #bbb));
+  background: -webkit-linear-gradient(top, rgba(239,239,239,0) 0%, #bbb 100%);
+  background: -moz-linear-gradient(top, rgba(239,239,239,0) 0%, #bbb 100%);
+  background: -o-linear-gradient(top, rgba(239,239,239,0) 0%, #bbb 100%);
+  background: -ms-linear-gradient(top, rgba(239,239,239,0) 0%, #bbb 100%);
+  background: linear-gradient(top, rgba(239,239,239,0) 0%, #bbb 100%);
 }
 #dropdown ul ul {
-  background-color: #eee;
-  position: absolute;
-}
-#dropdown bottom 100% left 0 {
   display: none;
 }
-#dropdown bottom 100% left 0 a {
-  background-color: #eee;
+ul {
+  padding: 40px 20px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  list-style: none;
+  position: relative;
+  display: inline-table;
 }
-#dropdown bottom 100% left 0 ul {
-  position: absolute;
-  top: 0;
-  left: 100%;
-  width: 100%;
-  margin-left: 0;
+ul li {
+  float: left;
+  border-top: 1px solid #6b727c;
 }
-#dropdown bottom 100% li:hover ul {
+ul border-bottom 1pxsolid #575f6a {
+  position: relative;
+}
+ul li a {
   display: block;
-  width: 200%;
 }
-#dropdown bottom 100% li:hover ul ul {
-  display: none;
+ul li padding 25px40px {
+  color: #757575;
+  text-decoration: none;
 }
-#dropdown bottom 100% li:hover li:hover ul {
+ul li:hover ul {
   display: block;
-  width: 100%;
+}
+ul li:hover a {
+  color: #fff;
+}
+ul ul {
+  background: #5f6975;
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
+  padding: 0;
+}
+ul position absolute {
+  top: 100%;
+}
+ul:after content "" {
+  clear: both;
+  display: block;
+}
+ul ul li {
+  float: none;
+  border-top: 1px solid #6b727c;
+}
+ul ul border-bottom 1pxsolid #575f6a {
+  position: relative;
+}
+ul ul li a {
+  padding: 15px 40px;
+  color: #fff;
+}
+ul ul li a:hover {
+  background: #4b545f;
 }
 #twitter {
   height: 150px;

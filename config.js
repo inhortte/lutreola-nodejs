@@ -20,14 +20,9 @@ module.exports = function(app, express) {
     app.set('port', process.env.PORT || 3000);
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
-    app.use(express.favicon());
-    app.use(express.bodyParser());
-    app.use(express.methodOverride());
     app.use(express.cookieParser());
-    app.use(express.session({ secret: 'flavigula' }));
-    //app.use(app.mongooseAuth.middleware());
-    // app.use(app.everyauth.middleware(app));
-    // app.use(app.router);
+    app.use(express.session({ secret: 'flavigula',
+			      store: new express.session.MemoryStore({ reapInterval:  60000 * 10 })}));
     app.use(app.stylus.middleware(
       { src: __dirname + '/public'
 	, compile: function(str, path) {
@@ -36,18 +31,22 @@ module.exports = function(app, express) {
       }
     ));
     app.use(express.static(__dirname + '/public'));
+    app.use(express.favicon());
+    app.use(express.bodyParser());
+    app.use(express.methodOverride());
+    //app.use(app.mongooseAuth.middleware());
+    // app.use(app.everyauth.middleware(app));
+    // app.use(app.router);
   });
 
   //env specific config
   app.configure('development', function(){
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-
     app.mongoose.connect('mongodb://localhost/naaritsad');
   });
 
   app.configure('production', function(){
     app.use(express.errorHandler());
-
     app.mongoose.connect('mongodb://localhost/naaritsad');
   });
 

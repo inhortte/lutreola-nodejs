@@ -1,10 +1,10 @@
 var express = require('express')
   , stylus = require('stylus')
   , nib = require('nib')
-  , routes = require('./routes')
 //  , everyauth = require('everyauth')
   , mongoose = require('mongoose')
   , async = require('async')
+  , markdown = require('node-markdown')
 //  , mongooseAuth = require('mongoose-auth-latest');
 
 app = module.exports = express();
@@ -13,6 +13,7 @@ app.mongoose = mongoose;
 app.stylus = stylus;
 app.nib = nib;
 app.async = async;
+app.markdown = markdown;
 // app.everyauth = everyauth;
 // Apprarently, this is depreciated.
 // everyauth.helpExpress(app); 
@@ -28,11 +29,9 @@ app.models.entry = require('./models/entry.js')(mongoose).model
 
 // routes
 
-app.get('/', routes.index);
-/*
-app.get('/logout', function(req, res) {
-  req.logout();
-  res.redirect('/');
-});
-*/
+require('./routes')();
+
+// app.get('/', routes.index);
+// app.get('/content/:id', routes.content);
+
 app.listen(app.get('port'));

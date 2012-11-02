@@ -21,7 +21,7 @@ html
       br.clear
       #subheader.span-24.round
         #breadcrumbs.round
-          include breadcrumbs
+          != breadcrumbs
         #login.round
           - if(false)
             | Welcome
@@ -58,7 +58,7 @@ html
             #flash
               | Flash goes here
             #content
-              p= title
+              h2= title
               block content
           #twitter.hlavni
             | Twitter / Facebook

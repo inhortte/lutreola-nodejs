@@ -90,7 +90,7 @@ h1, h2, h3, h4, h5, h6
   width 98.5%
   border solid 0px #630
   padding-bottom 20px
-  margin-top -5px
+  // margin-top -5px
 
 #subheader {
 	background: linear-gradient(top, #cccccc00, #cccccc00)
@@ -166,7 +166,7 @@ h1, h2, h3, h4, h5, h6
 
 #menu
   position absolute
-  top 20px // This must echo #dropdown. The whole header is -5px vertical.
+  top 5px // This must echo #dropdown. The whole header is -5px vertical.
   left 10px
 	font-size larger
 
@@ -213,61 +213,62 @@ h1, h2, h3, h4, h5, h6
   -webkit-border-radius 10px
   border-radius 10px
 
+#dropdown ul {
+	background: linear-gradient(top, #efefef00, #bbbbbbff)
+}
+
 #dropdown
   ul
-    list-style none
-    margin 0px
-    padding 0px
-  a, h2
-		font-size menu-font-size
-    display block
-    border-width 0
-		border-style solid
-		border-color #ccc
-    margin 0
-  h2
-    color black
-    background-color header-bg-color
-    font-size 100%
-		font-weight normal
-  a
-    color black
-    background-color header-bg-color
-    text-decoration none
-    padding 10px 10px 5px 10px
-    &:hover
-      background-color menu-hover-bg-color
-      color menu-hover-color
-  li.inline
-    float left
-    z-index 100
-  li
-    position relative
-  ul
-    ul
-      background-color header-bg-color
-      position absolute
-			bottom 100%
-			left 0
-      display none
-      a
-        background-color header-bg-color
-      ul
-        position absolute
-        top 0
-        left 100%
-        width 100%
-        margin-left 0
-    li:hover
-      ul
-        display block
-        width 200%
-        ul
-          display none
-      li:hover
-        ul
-          display block
-          width 100%
+	  ul
+		  display none
+	ul
+		padding 40px 20px
+		border-radius 10px
+		list-style none
+		position relative
+		display inline-table
+	ul
+		li
+	    float left
+	    border-top 1px solid #6b727c
+		  border-bottom 1px solid #575f6a
+			position relative
+		li
+			a
+			  display block
+				padding 25px 40px
+				color #757575
+				text-decoration none
+		li:hover
+			ul
+				display block
+			a
+				color #fff
+	ul
+	  ul
+	    background #5f6975
+	    border-radius 0px
+	    padding 0
+			position absolute
+	    top 100%
+	ul:after
+		content ""
+	  clear both
+	  display block
+	ul
+		ul
+			li
+	      float none
+	      border-top 1px solid #6b727c
+		    border-bottom 1px solid #575f6a
+			  position relative
+			li
+				a
+					padding 15px 40px
+					color: #fff
+			li
+				a:hover
+					background #4b545f
 
 #twitter
   height 150px

@@ -1,7 +1,12 @@
 #dropdown
   ul
-    each me in entries
-      li.inline
-        h2
-          a(href = "#{me[1]}")
-            = me.title
+    each me in entry_menus
+      li
+        a(href = "/content/#{me.entry_id}")
+          = me.title
+        - if(me.submenus.length > 0)
+          ul
+            each me_dd in me.submenus
+              li
+                a(href = "/content/#{me_dd.entry_id}")
+                  = me_dd.title
