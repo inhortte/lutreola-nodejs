@@ -17,6 +17,7 @@ body-font-family = 'Georgia'
 header-font-family = 'Quicksand'
 font-size = 14px
 menu-font-size = 12px
+header-font-size = 16px
 footer-font-size = 10px
 body-bg-color = #333
 body-text-color = #ccc
@@ -53,20 +54,19 @@ h1, h2, h3, h4, h5, h6
   color heading-color
   margin-bottom 0
 
-#main
-  width 100%
-  margin-left auto
-	margin-right auto
-	margin-bottom 0
-	margin-top 0
+@css {
+	#main {
+  	width: 100%;
+		margin-left: auto;
+		margin-right: auto;
+  }
+}
 
-#home_content
-  img
-    float left
-    margin 0
-  #footer
-    width 96%
-    color #fff
+@css {
+	#header {
+		font: 16px Quicksand;
+	}
+}
 
 #header
   background-color header-bg-color
@@ -75,22 +75,6 @@ h1, h2, h3, h4, h5, h6
   border solid 0px #630
   padding-bottom 20px
   margin-top -5px
-
-#home_content
-  img
-    float left
-    margin 0
-  #footer
-    width 96%
-    color #fff
-
-#header
-  background-color header-bg-color
-  position relative
-  width 98.5%
-  border solid 0px #630
-  padding-bottom 20px
-  // margin-top -5px
 
 #subheader {
 	background: linear-gradient(top, #cccccc00, #cccccc00)
@@ -116,16 +100,13 @@ h1, h2, h3, h4, h5, h6
     background-color header-bg-color
 
 #pagetitle
+  font 16px bold "Arial Black"
   float right
-  font-family "Arial Black"
-	font-weight bold
-	font-size 16px
   color #2a5
   padding-right 10px
 
 #footer
-  font-family "Helvetica"
-	font-size footer-font-size
+  font footer-font-size "Helvetica"
   color body-text-color
   padding 5px
   width 100%
@@ -155,7 +136,7 @@ h1, h2, h3, h4, h5, h6
   top 7px
   right 100px
   font-size menu-font-size
-  :color heading-color
+  color heading-color
   span
     display inline
     margin-top 4px
@@ -166,9 +147,8 @@ h1, h2, h3, h4, h5, h6
 
 #menu
   position absolute
-  top 5px // This must echo #dropdown. The whole header is -5px vertical.
+  top 0px // This must echo #dropdown. The whole header is -5px vertical.
   left 10px
-	font-size larger
 
 #necropolis {
 	background: linear-gradient(top, #352b2100, #352b21ff)
@@ -213,58 +193,83 @@ h1, h2, h3, h4, h5, h6
   -webkit-border-radius 10px
   border-radius 10px
 
-#dropdown ul {
-	background: linear-gradient(top, #efefef00, #bbbbbbff)
+#dropdown {
+	background: linear-gradient(top, #efefef00, #bbbbbbff);
+}
+
+#dropdown ul ul {
+	background: linear-gradient(top, #454545aa, #888888ff);
 }
 
 #dropdown
-  ul
-	  ul
-		  display none
+	@extend .round
+
+@css {
+	#dropdown {
+		margin-right: 0;
+		margin-left: 0;
+		margin-top: 5px;
+  }
+	#dropdown ul {
+		list-style: none;
+		position: relative;
+		display: inline-table;
+	}
+	#dropdown ul ul {
+		display: none;
+  }
+}
+
+@css {
+	#dropdown ul li {
+	  float: left;
+		position: relative;
+  }
+	#dropdown ul li a {
+	  display: block;
+		padding: 15px 15px;
+		color: #000000;
+	  text-decoration: none;
+  }
+}
+
+#dropdown
 	ul
-		padding 40px 20px
-		border-radius 10px
-		list-style none
-		position relative
-		display inline-table
-	ul
-		li
-	    float left
-	    border-top 1px solid #6b727c
-		  border-bottom 1px solid #575f6a
-			position relative
-		li
-			a
-			  display block
-				padding 25px 40px
-				color #757575
-				text-decoration none
 		li:hover
 			ul
 				display block
 			a
-				color #fff
-	ul
-	  ul
-	    background #5f6975
-	    border-radius 0px
-	    padding 0
-			position absolute
-	    top 100%
-	ul:after
-		content ""
-	  clear both
-	  display block
+				color #4c9
+		li
+			ul:hover
+				display block
+
+@css {
+  #dropdown ul ul {
+	  padding: 0;
+		position: absolute;
+		top: 80%;
+  }
+	#dropdown ul:after {
+		content: "";
+	  clear: both;
+	  display: block;
+	}
+	#dropdown ul ul li {
+	  float: none;
+	  border-top: 1px solid #6b727c;
+		border-bottom: 1px solid #575f6a;
+		position: relative;
+		z-index: 100;
+	}
+}
+
+#dropdown
 	ul
 		ul
 			li
-	      float none
-	      border-top 1px solid #6b727c
-		    border-bottom 1px solid #575f6a
-			  position relative
-			li
 				a
-					padding 15px 40px
+					padding 15px 15px
 					color: #fff
 			li
 				a:hover
