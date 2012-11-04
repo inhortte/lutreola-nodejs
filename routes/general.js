@@ -5,6 +5,11 @@ exports.adminPage = function(req) {
   return re.exec(req.url);
 }
 
+exports.adminLoginPage = function(req) {
+  var re = /\/admin\/login/;
+  return re.exec(req.url);
+}
+
 exports.galleryPage = function(req) {
   var re = /\/gallery/;
   return re.exec(req.url);
@@ -125,8 +130,10 @@ exports.beforeEachContent = function(req) {
 }
 
 exports.getBreadcrumbs = function(req, callback) {
-  if(this.adminPage(req)) {
-    callback("You are an administrator, sir.");
+  if(this.adminLoginPage(req)) {
+    callback("<strong>You may soon be an administrator, sir.</strong>");
+  } else if(this.adminPage(req)) {
+    callback("<strong>You are an administrator, sir.</strong>");
   } else if(this.galleryPage(req)) {
     callback("You are in the gallery, sir.");
   } else {

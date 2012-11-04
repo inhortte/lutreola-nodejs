@@ -14,7 +14,10 @@ html
         #search
           include search
         #menu
-          include options
+          if admin_page
+            include admin/options
+          else
+            include options
         br.clear
         br.clear
       br.clear
@@ -28,40 +31,47 @@ html
             | &nbsp; | &nbsp;
             a(href = '#') logout
           - else
-            a(href = '/member/signup') signup
-            | &nbsp; | &nbsp;
-            a(href = '#') login
+            a(href = '/admin/login') admin
             | &nbsp; | &nbsp;            
             a(href = '#') twitter login
             | &nbsp; | &nbsp;
             a(href = '#') facebook login
 
       #necropolis.span-24.round
-        .span-13.left
-          .hlavni.nopad
-            include top_left
-          .span-6.left
-            .hlavni.nopad
-              include middle_left_one
-            .hlavni.nopad
-              include bottom_left_one
-          .span-6.right.last
-            .hlavni.nopad
-              include middle_left_two
+        if admin_page
+          .span-23.last
             .hlavni
-              - if(false)
-                | may or may not be logged in
-              - else
-                | No one is definitely logged in
-        .span-10.right.last
-          .hlavni
-            #flash
-              | Flash goes here
-            #content
-              h2= title
-              block content
-          #twitter.hlavni
-            | Twitter / Facebook
+              #flash
+                | Flash goes here
+              #content
+                h2= title
+                block content
+        else
+          .span-13.left
+            .hlavni.nopad
+              include top_left
+            .span-6.left
+              .hlavni.nopad
+                include middle_left_one
+              .hlavni.nopad
+                include bottom_left_one
+            .span-6.right.last
+              .hlavni.nopad
+                include middle_left_two
+              .hlavni
+                - if(false)
+                  | may or may not be logged in
+                - else
+                  | No one is definitely logged in
+          .span-10.right.last
+            .hlavni
+              #flash
+                | Flash goes here
+              #content
+                h2= title
+                block content
+            #twitter.hlavni
+              | Twitter / Facebook
         br.clear
         #footer.span-4
           include footer
