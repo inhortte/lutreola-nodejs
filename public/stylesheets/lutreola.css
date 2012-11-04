@@ -285,6 +285,102 @@ h6 {
   -webkit-border-radius: 10px;
   border-radius: 10px;
 }
+.error {
+  color: #f00;
+}
+.notice {
+  color: #008000;
+}
+#select_menus,
+#select_collections {
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+#select_menus #select_box,
+#select_collections #select_box {
+  float: left;
+}
+#select_menus #instructions,
+#select_collections #instructions {
+  float: left;
+  padding-top: 20px;
+}
+#select_menus #menu_titles_div,
+#select_collections #menu_titles_div,
+#select_menus #collection_names_div,
+#select_collections #collection_names_div {
+  float: left;
+  padding-top: 10px;
+}
+#select_menus #menu_titles_div .menu_name,
+#select_collections #menu_titles_div .menu_name,
+#select_menus #collection_names_div .menu_name,
+#select_collections #collection_names_div .menu_name {
+  padding-right: 10px;
+}
+#photo_thumb img {
+  padding-right: 20px;
+  align: texttop;
+}
+#photo_thumb #image {
+  float: left;
+}
+#photo_thumb #input {
+  float: left;
+}
+#entry_menus ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 60%;
+}
+#entry_menus ul li {
+  margin: 0 3px 3px 3px;
+  padding: 5px 0 0 15px;
+  font-size: 12px;
+  height: 18px;
+}
+#entry_menus ul li span {
+  position: absolute;
+  margin-left: -1.3em;
+}
+#collection_photos ul {
+  list-style-type: none;
+  margin: 0;
+  width: 100%;
+}
+#collection_photos ul li {
+  float: left;
+  padding: 5px;
+}
+.coll_tab {
+  margin-top: 15px;
+}
+.coll_tab button {
+  margin: 0;
+  padding: 0;
+  width: 15px;
+}
+.coll_tab .count {
+  display: inline;
+  font-size: smaller;
+}
+.photo_item {
+  float: left;
+  padding: 5px;
+}
+.photo_item .name {
+  float: left;
+}
+.photo_item .delete {
+  float: right;
+}
+.photo_item .delete button {
+  margin: 0;
+  padding: 0;
+  width: 15px;
+}
 #dropdown {
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(239,239,239,0)), color-stop(1, #bbb));
   background: -webkit-linear-gradient(top, rgba(239,239,239,0) 0%, #bbb 100%);

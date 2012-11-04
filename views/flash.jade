@@ -1,3 +1,11 @@
-if flash['notice']
+if flash.error
+  hr
   p.error
-    = flash['notice']
+    b= flash.error
+  hr
+if flash.notice
+  hr
+  p.notice
+    b= flash.notice
+  hr
+    

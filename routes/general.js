@@ -15,6 +15,15 @@ exports.galleryPage = function(req) {
   return re.exec(req.url);
 }
 
+function backOrHome(req) {
+  var thurk = "";
+  if(req.session.current_entry) {
+    thurk += "(<a href=\"/content/" + req.session.current_entry + "\">back</a>)";
+  }
+  thurk += "&nbsp;(<a href=\"/\">home</a>)";
+  return(thurk);
+}
+
 function getHomeId(callback) {
   app.models.menu.findOne({name:'home'}, function(err, data) {
     callback(data._id);
@@ -71,6 +80,22 @@ function getMenu(menu_id, callback) {
 }
 exports.getMenu = getMenu;
 
+// A mongoose model has the relavent params in model._doc
+// sub_obj can be a new object which is inserted into the newold. :) Or null.
+function getTheDoc(obj, sub_obj, sub_obj_key, callback) {
+  var new_obj = {};
+  app.async.forEach(Object.keys(obj._doc),
+		    function(item, callback) {
+		      new_obj[item] = obj._doc[item];
+		      callback(null);
+		    },
+		    function(err) {
+		      if(sub_obj) new_obj[sub_obj_key] = sub_obj;
+		      callback(new_obj);
+		    });
+}
+exports.getTheDoc = getTheDoc;
+
 exports.subMenus = function(entry_menu, callback) {
   app.async.waterfall([
     // Get the indicated entry.
@@ -96,19 +121,41 @@ exports.subMenus = function(entry_menu, callback) {
     }
   ], function(err, entry_menus) {
     // These are actually the entry_SUB_menus.
-    entry_menu_with_submenus = {}
-    app.async.forEach(Object.keys(entry_menu._doc),
-		      function(item, callback) {
-			entry_menu_with_submenus[item] = entry_menu._doc[item];
-			callback(null);
-		      },
-		      function(err) {
-			entry_menu_with_submenus.submenus = entry_menus;
-			// console.log(entry_menu_with_submenus);
-			callback(null, entry_menu_with_submenus);
-		      });
+    getTheDoc(entry_menu, entry_menus, 'submenus',
+	      function(entry_menu_with_submenus) {
+		callback(null, entry_menu_with_submenus);
+	      });
   });
 }
+
+function setMember(req, member, callback) {
+  var memberish = {};
+  memberish.username = member.username;
+  memberish.email = member.email;
+  memberish.type = member.type;
+  req.session.member = memberish;
+  callback();
+}
+exports.setMember = setMember;
+
+function getMember(username, callback) {
+  app.models.member
+    .findOne({username:username}, function(err, member) {
+      // I hope member is null if he/she is not found.
+      if(member) {
+	var memberish = {};
+	memberish.username = member.username;
+	memberish.email = member.email;
+	memberish.type = member.type;
+	req.session.member = memberish;
+      } else {
+	if(req.session.member) {
+	  delete req.session.member;
+	}
+      }
+    });
+}
+exports.getMember = getMember;
 
 exports.beforeEach = function(req) {
   // breadcrumbs
@@ -131,9 +178,9 @@ exports.beforeEachContent = function(req) {
 
 exports.getBreadcrumbs = function(req, callback) {
   if(this.adminLoginPage(req)) {
-    callback("<strong>You may soon be an administrator, sir.</strong>");
+    callback("<strong>You may soon be an administrator, sir.</strong>" + backOrHome(req));
   } else if(this.adminPage(req)) {
-    callback("<strong>You are an administrator, sir.</strong>");
+    callback("<strong>You are an administrator, sir.</strong>" + backOrHome(req));
   } else if(this.galleryPage(req)) {
     callback("You are in the gallery, sir.");
   } else {

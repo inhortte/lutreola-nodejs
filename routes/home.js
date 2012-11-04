@@ -43,11 +43,13 @@ module.exports = function() {
       }
     ], function(err, entry_menus, thurks, bc) {
       res.render('index', {
-	admin_page: general.adminPage(req),
-	title: 'Leper',
-	thurk: thurks,
-	entry_menus: entry_menus,
-	breadcrumbs: bc
+	admin_page: general.adminPage(req)
+	, title: 'Leper'
+	, thurk: thurks
+	, entry_menus: entry_menus
+	, breadcrumbs: bc
+	, flash: req.flash()
+	, member: req.session.member
       });
     });
   });

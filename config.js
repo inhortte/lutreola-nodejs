@@ -23,6 +23,15 @@ module.exports = function(app, express) {
     app.use(express.cookieParser());
     app.use(express.session({ secret: 'flavigula',
 			      store: new express.session.MemoryStore({ reapInterval:  60000 * 10 })}));
+    app.use(app.flash());
+    /*
+    app.use(function(req, res) {
+      res.locals({
+	member: req.session.member,
+	flash: req.flash()
+      });
+    });
+    */
     app.use(app.stylus.middleware(
       { src: __dirname + '/public'
 	, compile: function(str, path) {
@@ -36,18 +45,27 @@ module.exports = function(app, express) {
     app.use(express.methodOverride());
     //app.use(app.mongooseAuth.middleware());
     // app.use(app.everyauth.middleware(app));
-    // app.use(app.router);
+    app.use(app.router);
   });
+
+  /*
+  app.locals.use(function(req, res) {
+    res.locals.member = req.session.member;
+    res.locals.flash = req.flash();
+  });
+  */
 
   //env specific config
   app.configure('development', function(){
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-    app.mongoose.connect('mongodb://localhost/naaritsad');
+    app.mongoose.connect('mongodb://lutreola:mustelid@ds039427.mongolab.com:39427/naaritsad');
+    // app.mongoose.connect('mongodb://localhost/naaritsad');
   });
 
   app.configure('production', function(){
     app.use(express.errorHandler());
-    app.mongoose.connect('mongodb://localhost/naaritsad');
+    app.mongoose.connect('mongodb://lutreola:mustelid@ds039427.mongolab.com:39427/naaritsad');
+    // app.mongoose.connect('mongodb://localhost/naaritsad');
   });
 
   return config;

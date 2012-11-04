@@ -17,6 +17,7 @@
     , "nib": "*"
     , "async": "*"
     , "node-markdown": "*"
+    , "connect-flash": "*"
   },
   "engines": {
     "node": ">= 0.8.12"

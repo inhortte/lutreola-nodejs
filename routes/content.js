@@ -52,12 +52,14 @@ module.exports = function() {
 	}
       }, function(err, results) {
 	res.render('content', {
-	  admin_page: general.adminPage(req),
-	  text: md(results.entry.en.toString()),
-	  entry: results.entry,
-	  entry_menus: results.entry_menus,
-	  title: results.entry.title,
-	  breadcrumbs: results.breadcrumbs
+	  admin_page: general.adminPage(req)
+	  , text: md(results.entry.en.toString())
+	  , entry: results.entry
+	  , entry_menus: results.entry_menus
+	  , title: results.entry.title
+	  , breadcrumbs: results.breadcrumbs
+	  , flash: req.flash()
+	  , member: req.session.member
 	});
       });
     });

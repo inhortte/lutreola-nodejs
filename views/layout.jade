@@ -26,10 +26,10 @@ html
         #breadcrumbs.round
           != breadcrumbs
         #login.round
-          - if(false)
-            | Welcome
+          - if(member)
+            | Welcome #{member.username}
             | &nbsp; | &nbsp;
-            a(href = '#') logout
+            a(href = '/admin/logout') logout
           - else
             a(href = '/admin/login') admin
             | &nbsp; | &nbsp;            
@@ -42,7 +42,7 @@ html
           .span-23.last
             .hlavni
               #flash
-                | Flash goes here
+                include flash
               #content
                 h2= title
                 block content
@@ -66,7 +66,7 @@ html
           .span-10.right.last
             .hlavni
               #flash
-                | Flash goes here
+                include flash
               #content
                 h2= title
                 block content

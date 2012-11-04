@@ -1,0 +1,17 @@
+extends ../layout
+
+block content
+  ul
+    each menu in menus
+      li
+        a(href = "/admin/menu/#{menu._id}")
+          = menu.name
+      ul
+        each entry_menu in menu.entry_menus
+          li
+            a(href = "/admin/entry/#{entry_menu.entry_id}")
+              = entry_menu.title
+              | &nbsp(
+              = entry_menu.title
+              | )
+              

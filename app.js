@@ -5,6 +5,7 @@ var express = require('express')
   , mongoose = require('mongoose')
   , async = require('async')
   , markdown = require('node-markdown')
+  , flash = require("connect-flash");
 //  , mongooseAuth = require('mongoose-auth-latest');
 
 app = module.exports = express();
@@ -14,6 +15,7 @@ app.stylus = stylus;
 app.nib = nib;
 app.async = async;
 app.markdown = markdown;
+app.flash = flash;
 // app.everyauth = everyauth;
 // Apprarently, this is depreciated.
 // everyauth.helpExpress(app); 
