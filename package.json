@@ -1,26 +1,26 @@
 {
   "name": "foundation-lutreola",
   "version": "0.0.1",
-  "private": true,
   "scripts": {
     "start": "node app"
   },
   "dependencies": {
-    "express": "3.0.0rc5"
-    , "jade": "*"
-    , "mongodb": ">= 0.9.6-7"
-    , "mongoose": ">= 2.5.10"
-    , "connect-mongoose": "*"
-    , "everyauth": ">= 0.2.32"
-    , "mongoose-auth-latest": "*"
-    , "stylus": "*"
-    , "nib": "*"
-    , "async": "*"
-    , "node-markdown": "*"
-    , "connect-flash": "*"
+    "express": "3.0.0rc5",
+    "jade": "*",
+    "mongodb": ">= 0.9.6-7",
+    "mongoose": ">= 2.5.10",
+    "connect-mongoose": "*",
+    "everyauth": ">= 0.2.32",
+    "mongoose-auth-latest": "*",
+    "stylus": "*",
+    "nib": "*",
+    "async": "*",
+    "node-markdown": "*",
+    "connect-flash": "*"
   },
   "engines": {
-    "node": ">= 0.8.12"
-    , "npm": ">= 1.1.64"
-  }
+    "node": "0.8.12",
+    "npm": "1.1.65"
+  },
+  "subdomain": "lutreola"
 }
