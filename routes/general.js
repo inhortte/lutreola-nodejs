@@ -24,6 +24,15 @@ function backOrHome(req) {
   return(thurk);
 }
 
+function createOption(value, text, selected) {
+  var here_we_go = "<option value=\"" + value + "\"";
+  if(selected) {
+    here_we_go += " selected=\"selected\"";
+  }
+  here_we_go += ">" + text + "</option>";
+  return here_we_go;
+}
+
 function getHomeId(callback) {
   app.models.menu.findOne({name:'home'}, function(err, data) {
     callback(data._id);
@@ -110,6 +119,18 @@ function getMenuEMArraysByEntry(entry, callback) {
 }
 exports.getMenuEMArraysByEntry = getMenuEMArraysByEntry;
 
+function makeMenuSelect(callback) {
+  app.models.menu
+    .find({}, null, {sort: {name: 1}}, function(err, menus) {
+      app.async.reduce(menus, "", function(memo, menu, callback) {
+	callback(null, memo += createOption(menu.name, menu.name, false));
+      }, function(err, result) {
+	callback(result);
+      });
+    });
+}
+exports.makeMenuSelect = makeMenuSelect;
+
 function makeMenuSelectByEntry(entry, callback) {
   getEntryMenusByEntry(entry, 'title', function(entry_menus) {
     app.async.waterfall([
@@ -132,12 +153,8 @@ function makeMenuSelectByEntry(entry, callback) {
       }
     ], function(err, menus) {
       app.async.reduce(menus, "", function(memo, menu, callback) {
-	memo += "<option value=\"" + menu.name + "\"";
-	if(menu.id == entry.main_menu) {
-	  memo += " selected=\"selected\"";
-	}
-	memo += ">" + menu.name + "</option>";
-	callback(null, memo);
+	callback(null, memo += createOption(menu.name, menu.name,
+					    menu.id == entry.main_menu));
       }, function(err, result) {
 	callback(result); // a string of <option /> containing each menu.
       });

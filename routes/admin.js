@@ -123,20 +123,26 @@ module.exports = function() {
 	  callback(null, bc, entry);
 	});
       },
-      // Get menu select.
+      // Get all menus select
       function(bc, entry, callback) {
+	general.makeMenuSelect(function(all_menus_select) {
+	  callback(null, bc, entry, all_menus_select);
+	});
+      },
+      // Get menu select.
+      function(bc, entry, all_menus_select, callback) {
 	general.makeMenuSelectByEntry(entry, function(menu_select) {
 	  // console.log(menu_select);
-	  callback(null, bc, entry, menu_select);
+	  callback(null, bc, entry, all_menus_select, menu_select);
 	});
       },
       // Get array of [menu, menu_select]...
-      function(bc, entry, menu_select, callback) {
+      function(bc, entry, all_menus_select, menu_select, callback) {
 	general.getMenuEMArraysByEntry(entry, function(menu_ems) {
-	  callback(null, bc, entry, menu_select, menu_ems);
+	  callback(null, bc, entry, all_menus_select, menu_select, menu_ems);
 	});
       }
-    ], function(err, bc, entry, menu_select, menu_ems) {
+    ], function(err, bc, entry, all_menus_select, menu_select, menu_ems) {
       res.render('admin/entry', {
 	admin_page: true
 	, title: "Update entry" 
@@ -144,8 +150,40 @@ module.exports = function() {
 	, flash: req.flash()
 	, id: entry._id
 	, entry: entry
+	, all_menus_select: all_menus_select
 	, menu_select: menu_select
 	, menu_ems: menu_ems
+	, member: req.session.member
+      });
+    });
+  });
+
+  app.get('/admin/entry', function(req, res) {
+    app.async.waterfall([
+      function(callback) {
+	general.beforeEach(req);
+	beforeEach(req, res);
+	callback(null);
+      },
+      function(callback) {
+	general.getBreadcrumbs(req, function(bc) {
+	  callback(null, bc);
+	});
+      },
+      // Get all menus select
+      function(bc, callback) {
+	general.makeMenuSelect(function(all_menus_select) {
+	  callback(null, bc, all_menus_select);
+	});
+      }
+    ], function(err, bc, all_menus_select) {
+      res.render('admin/entry', {
+	admin_page: true
+	, title: "New entry" 
+	, breadcrumbs: bc
+	, flash: req.flash()
+	, all_menus_select: all_menus_select
+	, menu_select: all_menus_select
 	, member: req.session.member
       });
     });
