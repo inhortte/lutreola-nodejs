@@ -80,6 +80,72 @@ function getMenu(menu_id, callback) {
 }
 exports.getMenu = getMenu;
 
+// sort_by is a string - the name of the field to sort by.
+function getEntryMenusByEntry(entry, sort_by, callback) {
+  app.models.entry_menu
+    .find({entry_id: entry.id}, null,
+	  {sort: {title: 1}}, function(err, entry_menus) {
+	    if(err) {
+	      console.log(err);
+	    }
+	    callback(entry_menus);
+	  });
+}
+exports.getEntryMenusByEntry = getEntryMenusByEntry;
+
+// returns an array: [[menu, entry_menu]... ]
+function getMenuEMArraysByEntry(entry, callback) {
+  app.models.entry_menu
+    .find({entry_id:entry._id}, null,
+	  {sort: {ordr: 1}}, function(err, entry_menus) {
+	    app.async.map(entry_menus, function(em, callback) {
+	      getMenu(em.menu_id, function(menu) {
+		callback(null, new Array(menu, em));
+	      });
+	    }, function(err, results) {
+	      // The aformentioned array is results.
+	      callback(results);
+	    });
+	  });
+}
+exports.getMenuEMArraysByEntry = getMenuEMArraysByEntry;
+
+function makeMenuSelectByEntry(entry, callback) {
+  getEntryMenusByEntry(entry, 'title', function(entry_menus) {
+    app.async.waterfall([
+      function(callback) {
+	var menus = [];
+	app.async.forEach(entry_menus,
+			  function(em, callback) {
+			    getMenu(em.menu_id, function(menu) {
+			      menus.push(menu);
+			      callback(null);
+			    });
+			  },
+			  function(err) {
+			    callback(null, menus);
+			  });
+      },
+      function(menus, callback) {
+	menus.sort(function(x, y) { return x.name.localeCompare(y.name) });
+	callback(null, menus);
+      }
+    ], function(err, menus) {
+      app.async.reduce(menus, "", function(memo, menu, callback) {
+	memo += "<option value=\"" + menu.name + "\"";
+	if(menu.id == entry.main_menu) {
+	  memo += " selected=\"selected\"";
+	}
+	memo += ">" + menu.name + "</option>";
+	callback(null, memo);
+      }, function(err, result) {
+	callback(result); // a string of <option /> containing each menu.
+      });
+    });
+  });
+}
+exports.makeMenuSelectByEntry = makeMenuSelectByEntry;
+
 // A mongoose model has the relavent params in model._doc
 // sub_obj can be a new object which is inserted into the newold. :) Or null.
 function getTheDoc(obj, sub_obj, sub_obj_key, callback) {

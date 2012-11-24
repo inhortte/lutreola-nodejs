@@ -90,6 +90,7 @@ module.exports = function() {
 				      });
 			    },
 			    function(err) {
+			      // console.log(menus_with_entry_menus);
 			      res.render('admin/map', {
 				admin_page: true
 				, title: "Menu map"
@@ -100,6 +101,53 @@ module.exports = function() {
 			      });
 			    });
 	});
+    });
+  });
+
+  app.get('/admin/entry/:id', function(req, res) {
+    app.async.waterfall([
+      function(callback) {
+	general.beforeEach(req);
+	beforeEach(req, res);
+	callback(null);
+      },
+      function(callback) {
+	general.getBreadcrumbs(req, function(bc) {
+	  callback(null, bc);
+	});
+      },
+      // Get entry.
+      function(bc, callback) {
+	general.getEntry(req.params.id, req, function(entry) {
+	  // console.log("Entry \"" + entry.title + "\" found.");
+	  callback(null, bc, entry);
+	});
+      },
+      // Get menu select.
+      function(bc, entry, callback) {
+	general.makeMenuSelectByEntry(entry, function(menu_select) {
+	  // console.log(menu_select);
+	  callback(null, bc, entry, menu_select);
+	});
+      },
+      // Get array of [menu, menu_select]...
+      function(bc, entry, menu_select, callback) {
+	general.getMenuEMArraysByEntry(entry, function(menu_ems) {
+	  callback(null, bc, entry, menu_select, menu_ems);
+	});
+      }
+    ], function(err, bc, entry, menu_select, menu_ems) {
+      res.render('admin/entry', {
+	admin_page: true
+	, title: "Update entry" 
+	, breadcrumbs: bc
+	, flash: req.flash()
+	, id: entry._id
+	, entry: entry
+	, menu_select: menu_select
+	, menu_ems: menu_ems
+	, member: req.session.member
+      });
     });
   });
 }
