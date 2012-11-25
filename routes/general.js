@@ -77,6 +77,14 @@ function getEntry(id, req, callback) {
 }
 exports.getEntry = getEntry;
 
+function getLastEntryId(callback) {
+  app.models.entry
+    .findOne({}, '_id', {sort: {_id: -1}}, function(err, entry) {
+      callback(entry._id);
+    });
+}
+exports.getLastEntryId = getLastEntryId;
+
 function getMenu(menu_id, callback) {
   if(menu_id) {
     app.models.menu.findOne((menu_id ? {_id:menu_id} : {name:'home'}),
@@ -89,10 +97,21 @@ function getMenu(menu_id, callback) {
 }
 exports.getMenu = getMenu;
 
+function getMenuByName(name, callback) {
+  app.models.menu
+    .findOne({name: name}, function(err, menu) {
+      if(!menu) {
+	menu = getMenu(null);
+      }
+      callback(menu);
+    });
+}
+exports.getMenuByName = getMenuByName;
+
 // sort_by is a string - the name of the field to sort by.
 function getEntryMenusByEntry(entry, sort_by, callback) {
   app.models.entry_menu
-    .find({entry_id: entry.id}, null,
+    .find({entry_id: entry._id}, null,
 	  {sort: {title: 1}}, function(err, entry_menus) {
 	    if(err) {
 	      console.log(err);
@@ -162,6 +181,36 @@ function makeMenuSelectByEntry(entry, callback) {
   });
 }
 exports.makeMenuSelectByEntry = makeMenuSelectByEntry;
+
+function alignEntryMenus(entry, mts, callback) {
+  app.async.waterfall([
+    function(callback) {
+      app.models.entry_menu
+	.find({entry_id: entry._id}, function(err, entry_menus) {
+	  if(entry_menus) {
+	    app.async.forEach(entry_menus, function(em, callback) {
+	      em.remove();
+	      callback(null);
+	    }, function(err) {});
+	  }
+	});
+      callback(null);
+    }
+  ], function(err) {
+    app.async.forEach(Object.keys(mts), function(key, callback) {
+      getMenuByName(key.substr(2), function(menu) {
+	var em = app.models.entry_menu({entry_id: entry._id,
+					menu_id: menu._id,
+					title: mts[key]});
+	em.save();
+	callback(null);
+      });
+    }, function(err) {
+      callback();
+    });
+  });
+}
+exports.alignEntryMenus = alignEntryMenus;
 
 // A mongoose model has the relavent params in model._doc
 // sub_obj can be a new object which is inserted into the newold. :) Or null.

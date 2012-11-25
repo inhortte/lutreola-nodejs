@@ -7,10 +7,10 @@ html
       #header.span-24.round
         #estonian_flag
           a#flag_ee(href = "#")
-            img(width = "28", src = "/images/ee_flag.gif")
+            img(width = "29", src = "/images/estonian_flag.png")
         #english_flag
           a(id = "flag_en", href = "#")
-            img(width = "28", src = "/images/en_flag.gif")
+            img(width = "28", src = "/images/british_flag.png")
         #search
           include search
         #menu
@@ -29,6 +29,8 @@ html
           - if(member)
             | Welcome #{member.username}
             | &nbsp; | &nbsp;
+            a(href = '/admin/map') admin
+            | &nbsp; | &nbsp;              
             a(href = '/admin/logout') logout
           - else
             a(href = '/admin/login') admin
@@ -37,6 +39,18 @@ html
             | &nbsp; | &nbsp;
             a(href = '#') facebook login
 
+      br.clear
+      br.clear
+      br.clear
+      br.clear
+      br.clear
+      br.clear        
+      br.clear
+      br.clear
+      br.clear
+      br.clear
+      br.clear
+      br.clear        
       #necropolis.span-24.round
         if admin_page
           .span-23.last

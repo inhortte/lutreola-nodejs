@@ -100,10 +100,15 @@ a img {
   border: none;
 }
 body {
+background: url('/images/lutreola_bg_animal.jpg') no-repeat 0% 15%fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+body {
   font-family: 'Georgia';
   font-size: 14px;
-  background-image: url("/images/lutreola_27.jpg");
-  background-color: #333;
   color: #ccc;
   margin: 0 0 0 0;
 }
@@ -121,13 +126,17 @@ img {
   border: 0;
 }
 h1,
-h2,
 h3,
 h4,
 h5,
 h6 {
   color: #568025;
   margin-bottom: 0;
+}
+h2 {
+  color: #568025;
+  font-size: 18px;
+  margin-bottom: 10px;
 }
 #main {
 	width: 100%;
@@ -239,7 +248,7 @@ h6 {
   background: linear-gradient(top, rgba(53,43,33,0) 0%, #352b21 100%);
 }
 #necropolis {
-  padding: 10px;
+  padding: 10px 0 10px 10px;
   width: 97%;
 }
 #necropolis #left {

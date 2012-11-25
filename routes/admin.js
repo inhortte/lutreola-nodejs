@@ -188,6 +188,71 @@ module.exports = function() {
       });
     });
   });
+
+  app.post('/admin/entry', function(req, res) {
+    app.async.waterfall([
+      function(callback) {
+	general.beforeEach(req);
+	beforeEach(req, res);
+	callback(null);
+      },
+      function(callback) {
+	delete req.body.menus;
+	app.async.reduce(Object.keys(req.body), {}, function(mts, key, callback) {
+	  if(/^mt/.exec(key)) {
+	    mts[key] = req.body[key];
+	    delete req.body[key];
+	  }
+	  callback(null, mts);
+	}, function(err, mts) {
+	  callback(null, mts);
+	});
+      },
+      function(mts, callback) {
+	general.getMenuByName(req.body.main_menu, function(menu) {
+	  callback(null, mts, menu);
+	});
+      }
+    ], function(err, mts, menu) {
+      req.body.main_menu = menu._id;
+      if(typeof req.body.id !== 'undefined') {
+	// req.body._id = req.body.id;
+	var id = req.body.id;
+	delete req.body.id;
+	console.log("current req.body:");
+	console.log(JSON.stringify(req.body));
+	app.models.entry.findOneAndUpdate({_id:id}, req.body, function(err, entry) {
+	  if(err) {
+	    console.log(JSON.stringify(err));
+	    req.flash('error', 'The entry could not be updated! Please go play with Neptun for a while.');
+	  } else {
+	    req.flash('notice', 'Entry updated. Have a splendid day.');
+	  }
+	  general.alignEntryMenus(entry, mts, function() {
+	    res.redirect("/admin/entry/" + id);
+	  });
+	});
+      } else {
+	general.getLastEntryId(function(id) {
+	  console.log("Last id " + id);
+	  req.body._id = id + 1;
+	  var new_entry = app.models.entry(req.body)
+	  new_entry.save(function(err) {
+	    if(err) {
+	      console.log(JSON.stringify(err));
+	      req.flash('error', 'The entry could not be created! Please go play with Neptun for a while.');
+	      res.redirect("/admin/entry");
+	    } else {
+	      req.flash('notice', 'Entry created. Have a splendid day.');
+	      gneral.alignEntryMenus(new_entry, mts, function() {
+		res.redirect("/admin/entry/" + (id + 1));
+	      });
+	    }
+	  });
+	});
+      }
+    });
+  });
 }
 
 

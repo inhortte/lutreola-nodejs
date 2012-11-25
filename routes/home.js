@@ -44,7 +44,7 @@ module.exports = function() {
     ], function(err, entry_menus, thurks, bc) {
       res.render('index', {
 	admin_page: general.adminPage(req)
-	, title: 'Leper'
+	, title: 'Foundation Lutreola'
 	, thurk: thurks
 	, entry_menus: entry_menus
 	, breadcrumbs: bc

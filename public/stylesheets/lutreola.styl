@@ -30,11 +30,19 @@ menu-hover-bg-color = brown
 menu-hover-color = green
 hlavni-border-color = #4ac
 
+@css {
+	body {
+  background: url('/images/lutreola_bg_animal.jpg') no-repeat 0% 15%fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+  }
+}
+
 body
   font-family body-font-family
   font-size font-size
-  background-image url('/images/lutreola_27.jpg')
-  background-color body-bg-color
   color body-text-color
   margin 0 0 0 0
 
@@ -50,9 +58,14 @@ a
 img
   border 0
 
-h1, h2, h3, h4, h5, h6
+h1, h3, h4, h5, h6
   color heading-color
   margin-bottom 0
+
+h2
+	color heading-color
+	font-size 18px
+	margin-bottom 10px
 
 @css {
 	#main {
@@ -155,7 +168,7 @@ h1, h2, h3, h4, h5, h6
 }
 
 #necropolis
-  padding 10px
+  padding 10px 0 10px 10px
   width 97%
   #left
     float left
