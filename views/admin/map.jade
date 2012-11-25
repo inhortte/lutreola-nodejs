@@ -3,12 +3,12 @@ extends ../layout
 block content
   ul
     each menu in menus
-      li
+      li.menu
         a(href = "/admin/menu/#{menu._id}")
           = menu.name
       ul
         each entry_menu in menu.entry_menus
-          li
+          li.entry_menu
             a(href = "/admin/entry/#{entry_menu.entry_id}")
               = entry_menu.title
               | &nbsp(

@@ -125,7 +125,7 @@ module.exports = function() {
       },
       // Get all menus select
       function(bc, entry, callback) {
-	general.makeMenuSelect(function(all_menus_select) {
+	general.makeMenuSelect(null, function(all_menus_select) {
 	  callback(null, bc, entry, all_menus_select);
 	});
       },
@@ -172,7 +172,7 @@ module.exports = function() {
       },
       // Get all menus select
       function(bc, callback) {
-	general.makeMenuSelect(function(all_menus_select) {
+	general.makeMenuSelect(null, function(all_menus_select) {
 	  callback(null, bc, all_menus_select);
 	});
       }
@@ -253,6 +253,50 @@ module.exports = function() {
       }
     });
   });
-}
 
+  app.get('/admin/menu/:id', function(req, res) {
+    app.async.waterfall([
+      function(callback) {
+	general.beforeEach(req);
+	beforeEach(req, res);
+	callback(null);
+      },
+      function(callback) {
+	general.getBreadcrumbs(req, function(bc) {
+	  callback(null, bc);
+	});
+      },
+      // Get menu.
+      function(bc, callback) {
+	general.getMenu(req.params.id, function(menu) {
+	  callback(null, bc, menu);
+	});
+      },
+      // Get menu select by id
+      function(bc, menu, callback) {
+	general.makeMenuSelect(menu._id, function(menu_select_by_id) {
+	  callback(null, bc, menu, menu_select_by_id);
+	});
+      },
+      // Get page select
+      function(bc, menu, menu_select_by_id, callback) {
+	general.makePageSelect(menu, function(page_select) {
+	  callback(null, bc, menu, menu_select_by_id, page_select);
+	});
+      },
+    ], function(err, bc, menu, menu_select_by_id, page_select) {
+      res.render('admin/menu', {
+	admin_page: true
+	, title: "Update menu" 
+	, breadcrumbs: bc
+	, flash: req.flash()
+	, id: menu._id
+	, menu: menu
+	, menu_select_by_id: menu_select_by_id
+	, page_select: page_select
+	, member: req.session.member
+      });
+    });
+  });
+}
 

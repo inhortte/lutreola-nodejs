@@ -138,17 +138,47 @@ function getMenuEMArraysByEntry(entry, callback) {
 }
 exports.getMenuEMArraysByEntry = getMenuEMArraysByEntry;
 
-function makeMenuSelect(callback) {
+// If menu_id is null, then then all menus are included, and
+// value/text are both menu.name. Otherwise, all menus but the 
+// one with the corresponding id are included, and the values
+// are menu._id.
+function makeMenuSelect(menu_id, callback) {
   app.models.menu
     .find({}, null, {sort: {name: 1}}, function(err, menus) {
       app.async.reduce(menus, "", function(memo, menu, callback) {
-	callback(null, memo += createOption(menu.name, menu.name, false));
+	var option_string = '';
+	if(menu_id) {
+	  if(menu._id != menu_id) {
+	    option_string = createOption(menu._id, menu.name, false);
+	  }
+	} else {
+	  option_string = createOption(menu.name, menu.name, false);
+	}
+	callback(null, memo += option_string);
       }, function(err, result) {
 	callback(result);
       });
     });
 }
 exports.makeMenuSelect = makeMenuSelect;
+
+// Why not just send the fucking menu in?
+// So I did it!
+function makePageSelect(menu, callback) {
+  app.models.entry
+    .find({main_menu: menu._id}, function(err, entries) {
+      console.log("entries:");
+      console.log(JSON.stringify(entries));
+      app.async.reduce(entries, "", function(memo, entry, callback) {
+	callback(null, memo += createOption(entry._id,
+					    entry.title,
+					    menu.default_page_id == entry._id));
+      }, function(err, result) {
+	callback(result);
+      });
+    });
+}
+exports.makePageSelect = makePageSelect;
 
 function makeMenuSelectByEntry(entry, callback) {
   getEntryMenusByEntry(entry, 'title', function(entry_menus) {

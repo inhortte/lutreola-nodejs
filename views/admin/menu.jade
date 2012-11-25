@@ -1,0 +1,31 @@
+extends ../layout
+
+block content
+  form#menu_form(action = "/admin/menu", method = "post")
+    if typeof id !== 'undefined'
+      input(type = "hidden", name = "id", value = id)
+    p
+      label(for = "name") Name
+      input(type = "text", name = "name", value = typeof menu === 'undefined' ? '' : menu.name)
+    p
+      label(for = "parent_id") Parent Menu
+      select(id = "parent_id", name = "parent_id")
+        != menu_select_by_id
+    p
+      label(for = "default_page_id") Default Page
+      select(id = "page_select", name = "default_page_id")
+        != page_select
+    p
+      | Arrange the menus!
+    #entry_menus
+      ul#ems_sortable
+        if typeof entry_menus !== 'undefined'
+          each em in entry_menus
+            li(class = "ui-state-default", id = "ordr_#{em.entry_id}")
+              span.ui-icon.ui-icon-arrowthick-2-n-s
+              = em.title
+              | (#{em.entry.title})
+              = "(#{em.entry.title})"
+          
+    p
+      input(type = "submit", value = "Save")

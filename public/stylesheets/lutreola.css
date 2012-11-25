@@ -107,7 +107,7 @@ background: url('/images/lutreola_bg_animal.jpg') no-repeat 0% 15%fixed;
 	background-size: cover;
 }
 body {
-  font-family: 'Georgia';
+  font-family: 'Quicksand';
   font-size: 14px;
   color: #ccc;
   margin: 0 0 0 0;
@@ -299,6 +299,12 @@ h2 {
 }
 .notice {
   color: #008000;
+}
+li.menu {
+  font-size: 16px;
+}
+li.entry_menu {
+  padding-left: 20px;
 }
 #select_menus,
 #select_collections {
