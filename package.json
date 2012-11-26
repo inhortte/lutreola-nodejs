@@ -16,7 +16,10 @@
     "nib": "*",
     "async": "*",
     "node-markdown": "*",
-    "connect-flash": "*"
+    "connect-flash": "*",
+    "util": "*",
+    "ntwitter": "*",
+    "socket.io": "*"
   },
   "engines": {
     "node": "0.8.12",

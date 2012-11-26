@@ -61,23 +61,14 @@ html
                 h2= title
                 block content
         else
-          .span-13.left
+          .span-6.left
             .hlavni.nopad
-              include top_left
-            .span-6.left
-              .hlavni.nopad
-                include middle_left_one
-              .hlavni.nopad
-                include bottom_left_one
-            .span-6.right.last
-              .hlavni.nopad
-                include middle_left_two
-              .hlavni
-                - if(false)
-                  | may or may not be logged in
-                - else
-                  | No one is definitely logged in
-          .span-10.right.last
+              include middle_left_one
+            .hlavni.nopad
+              include middle_left_two
+            .hlavni.nopad
+              include bottom_left_one                
+          .span-17.right.last
             .hlavni
               #flash
                 include flash
