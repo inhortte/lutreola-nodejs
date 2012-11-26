@@ -1,7 +1,7 @@
 extends ../layout
 
 block content
-  form#menu_form(action = "/admin/menu", method = "post")
+  form.admin_form(action = "/admin/menu", method = "post")
     if typeof id !== 'undefined'
       input(type = "hidden", name = "id", value = id)
     p
@@ -15,6 +15,8 @@ block content
       label(for = "default_page_id") Default Page
       select(id = "page_select", name = "default_page_id")
         != page_select
+    br.clear
+    br.clear
     p
       | Arrange the menus!
     #entry_menus
@@ -29,3 +31,5 @@ block content
           
     p
       input(type = "submit", value = "Save")
+    p
+      

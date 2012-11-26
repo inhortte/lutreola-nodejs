@@ -85,6 +85,14 @@ function getLastEntryId(callback) {
 }
 exports.getLastEntryId = getLastEntryId;
 
+function getLastMenuId(callback) {
+  app.models.menu
+    .findOne({}, '_id', {sort: {_id: -1}}, function(err, menu) {
+      callback(menu._id);
+    });
+}
+exports.getLastMenuId = getLastMenuId;
+
 function getMenu(menu_id, callback) {
   if(menu_id) {
     app.models.menu.findOne((menu_id ? {_id:menu_id} : {name:'home'}),
@@ -140,39 +148,44 @@ exports.getMenuEMArraysByEntry = getMenuEMArraysByEntry;
 
 // If menu_id is null, then then all menus are included, and
 // value/text are both menu.name. Otherwise, all menus but the 
-// one with the corresponding id are included, and the values
-// are menu._id.
+// one with the corresponding id are included, plus a blank line,
+// and the values are menu._id.
 function makeMenuSelect(menu_id, callback) {
-  app.models.menu
-    .find({}, null, {sort: {name: 1}}, function(err, menus) {
-      app.async.reduce(menus, "", function(memo, menu, callback) {
-	var option_string = '';
-	if(menu_id) {
-	  if(menu._id != menu_id) {
-	    option_string = createOption(menu._id, menu.name, false);
+  getMenu(menu_id, function(current_menu) {
+    app.models.menu
+      .find({}, null, {sort: {name: 1}}, function(err, menus) {
+	app.async.reduce(menus, "", function(memo, menu, callback) {
+	  var option_string = '';
+	  if(menu_id != null && menu_id >= 0) {
+	    if(menu._id != menu_id) {
+	      option_string = createOption(menu._id, menu.name, menu_id == 0 ? false : menu._id == current_menu.parent_id);
+	    }
+	  } else {
+	    option_string = createOption(menu.name, menu.name, false);
 	  }
-	} else {
-	  option_string = createOption(menu.name, menu.name, false);
-	}
-	callback(null, memo += option_string);
-      }, function(err, result) {
-	callback(result);
+	  callback(null, memo += option_string);
+	}, function(err, result) {
+	  if(menu_id) {
+	    result = "<option value=\"0\"></option>" + result;
+	  }
+	  callback(result);
+	});
       });
     });
 }
 exports.makeMenuSelect = makeMenuSelect;
 
 // Why not just send the fucking menu in?
-// So I did it!
+// So I did it! And if menu null, all the pages are shown!
 function makePageSelect(menu, callback) {
   app.models.entry
-    .find({main_menu: menu._id}, function(err, entries) {
-      console.log("entries:");
-      console.log(JSON.stringify(entries));
+    .find(menu ? {main_menu: menu._id}: {}, function(err, entries) {
+      // console.log("entries:");
+      // console.log(JSON.stringify(entries));
       app.async.reduce(entries, "", function(memo, entry, callback) {
 	callback(null, memo += createOption(entry._id,
 					    entry.title,
-					    menu.default_page_id == entry._id));
+					    menu == null ? false : menu.default_page_id == entry._id));
       }, function(err, result) {
 	callback(result);
       });

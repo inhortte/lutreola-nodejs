@@ -306,6 +306,20 @@ li.menu {
 li.entry_menu {
   padding-left: 20px;
 }
+form.admin_form {
+  width: 50%;
+}
+form.admin_form label {
+  float: left;
+  margin-top: 10px;
+}
+form.admin_form input,
+form.admin_form select {
+  float: right;
+}
+form.admin_form p {
+  clear: both;
+}
 #select_menus,
 #select_collections {
   width: 100%;

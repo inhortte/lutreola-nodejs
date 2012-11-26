@@ -192,7 +192,6 @@ module.exports = function() {
   app.post('/admin/entry', function(req, res) {
     app.async.waterfall([
       function(callback) {
-	general.beforeEach(req);
 	beforeEach(req, res);
 	callback(null);
       },
@@ -219,11 +218,11 @@ module.exports = function() {
 	// req.body._id = req.body.id;
 	var id = req.body.id;
 	delete req.body.id;
-	console.log("current req.body:");
-	console.log(JSON.stringify(req.body));
+	// console.log("current req.body:");
+	// console.log(JSON.stringify(req.body));
 	app.models.entry.findOneAndUpdate({_id:id}, req.body, function(err, entry) {
 	  if(err) {
-	    console.log(JSON.stringify(err));
+	    // console.log(JSON.stringify(err));
 	    req.flash('error', 'The entry could not be updated! Please go play with Neptun for a while.');
 	  } else {
 	    req.flash('notice', 'Entry updated. Have a splendid day.');
@@ -234,17 +233,17 @@ module.exports = function() {
 	});
       } else {
 	general.getLastEntryId(function(id) {
-	  console.log("Last id " + id);
+	  // console.log("Last id " + id);
 	  req.body._id = id + 1;
 	  var new_entry = app.models.entry(req.body)
 	  new_entry.save(function(err) {
 	    if(err) {
-	      console.log(JSON.stringify(err));
+	      // console.log(JSON.stringify(err));
 	      req.flash('error', 'The entry could not be created! Please go play with Neptun for a while.');
 	      res.redirect("/admin/entry");
 	    } else {
 	      req.flash('notice', 'Entry created. Have a splendid day.');
-	      gneral.alignEntryMenus(new_entry, mts, function() {
+	      general.alignEntryMenus(new_entry, mts, function() {
 		res.redirect("/admin/entry/" + (id + 1));
 	      });
 	    }
@@ -296,6 +295,81 @@ module.exports = function() {
 	, page_select: page_select
 	, member: req.session.member
       });
+    });
+  });
+
+  app.get('/admin/menu', function(req, res) {
+    app.async.waterfall([
+      function(callback) {
+	general.beforeEach(req);
+	beforeEach(req, res);
+	callback(null);
+      },
+      function(callback) {
+	general.getBreadcrumbs(req, function(bc) {
+	  callback(null, bc);
+	});
+      },
+      // Get menu select by id
+      function(bc, callback) {
+	general.makeMenuSelect(0, function(menu_select_by_id) {
+	  callback(null, bc, menu_select_by_id);
+	});
+      },
+      // Get page select
+      function(bc, menu_select_by_id, callback) {
+	general.makePageSelect(null, function(page_select) {
+	  callback(null, bc, menu_select_by_id, page_select);
+	});
+      },
+    ], function(err, bc, menu_select_by_id, page_select) {
+      res.render('admin/menu', {
+	admin_page: true
+	, title: "New menu" 
+	, breadcrumbs: bc
+	, flash: req.flash()
+	, menu_select_by_id: menu_select_by_id
+	, page_select: page_select
+	, member: req.session.member
+      });
+    });
+  });
+
+  app.post('/admin/menu', function(req, res) {
+    app.async.waterfall([
+      function(callback) {
+	beforeEach(req, res);
+	callback(null);
+      },
+    ], function(err) {
+      if(typeof req.body.id !== 'undefined') {
+	var id = req.body.id;
+	delete req.body.id;
+	app.models.menu.findOneAndUpdate({_id:id}, req.body, function(err, menu) {
+	  if(err) {
+	    req.flash('error', 'The menu was not updated. Please fix me a bowl of soup.');
+	  } else {
+	    req.flash('notice', 'The menu was updated! But my foot still hurts.');
+	  }
+	  res.redirect('/admin/menu/' + id);
+	});
+      } else {
+	general.getLastMenuId(function(id) {
+	  req.body._id = id + 1;
+	  console.log("Trying to save...");
+	  console.log(JSON.stringify(req.body));
+	  var new_menu = app.models.menu(req.body);
+	  new_menu.save(function(err) {
+	    if(err) {
+	      console.log(JSON.stringify(err));
+	      req.flash('error', 'The menu could not be created. Sounds like a personal problem.');
+	    } else {
+	      req.flash('notice', 'The menu was created. Praise Jesus!');
+	    }
+	    res.redirect('/admin/menu/' + (id + 1));
+	  });
+	});
+      }
     });
   });
 }
