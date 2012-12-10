@@ -33,6 +33,27 @@ function createOption(value, text, selected) {
   return here_we_go;
 }
 
+function getTweets(callback) {
+  app.twit.verifyCredentials(function(err, data) {
+    // console.log(data);
+  }).getUserTimeline({
+    screen_name: 'inhortte'
+    , count: 11
+  }, function(err, tweets) {
+    // console.log(tweets[0]);
+    app.async.map(tweets, function(tweet, callback) {
+      tw = {
+	created_at: app.strftime('%d/%m/%Y %H:%M', tweet.created_at)
+	, text: tweet.text
+      };
+      callback(null, tw);
+    }, function(err, tweets) {
+      callback(tweets);
+    });
+  });
+}
+exports.getTweets = getTweets;
+
 function getHomeId(callback) {
   app.models.menu.findOne({name:'home'}, function(err, data) {
     callback(data._id);
@@ -41,8 +62,8 @@ function getHomeId(callback) {
 exports.getHomeId = getHomeId;
 
 function getEntryId(req, callback) {
-  console.log("unparsed url => " + req.url);
-  console.log("parsed url -> " + url.parse(req.url));
+  // console.log("unparsed url => " + req.url);
+  // console.log("parsed url -> " + url.parse(req.url));
   m = /\/content\/(\d+)/.exec(req.url);
   if(m) {
     callback(m[1]);

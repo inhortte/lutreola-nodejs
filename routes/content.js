@@ -14,26 +14,27 @@ module.exports = function() {
       function(callback) {
 	general.beforeEach(req);
 	callback(null);
-      }, function(callback) {
-	general.beforeEachContent(req);
-	callback(null);
       },
       function(callback) {
+	general.beforeEachContent(req);
+	general.getTweets(function(tweets) {
+	  callback(null, tweets);
+	});
+      },
+      function(tweets, callback) {
 	general.getEntry(req.params.id, req, function(entry) {
-	  callback(null, entry.main_menu);
+	  callback(null, tweets, entry.main_menu);
 	});
       }
-    ], function(err, menu_id) {
-      console.log(JSON.stringify(req.session));
+    ], function(err, tweets, menu_id) {
+      // console.log(JSON.stringify(req.session));
       app.async.parallel({
 	entry_menus: function(callback) {
-	  console.log('about to search for entry_menus with menu_id -> ' + menu_id);
 	  app.models.entry_menu
 	    .find({menu_id:menu_id}, null,
 		  {sort: {ordr: 1}}, function(err, entry_menus) {
 		    app.async.map(entry_menus, general.subMenus,
 				  function(err, entry_menus) {
-				    console.log(entry_menus);
 				    callback(null, entry_menus);
 				  });
 		  });
@@ -59,6 +60,7 @@ module.exports = function() {
 	  , title: results.entry.title
 	  , breadcrumbs: results.breadcrumbs
 	  , flash: req.flash()
+	  , tweets: tweets
 	  , member: req.session.member
 	});
       });

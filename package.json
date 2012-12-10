@@ -19,7 +19,8 @@
     "connect-flash": "*",
     "util": "*",
     "ntwitter": "*",
-    "socket.io": "*"
+    "socket.io": "*",
+    "strftime": "*"
   },
   "engines": {
     "node": "0.8.12",

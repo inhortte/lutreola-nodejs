@@ -6,6 +6,7 @@ var express = require('express')
   , async = require('async')
   , markdown = require('node-markdown')
   , flash = require("connect-flash")
+  , strftime = require("strftime")
   , twitter = require("ntwitter")
   , util = require('util');
 
@@ -18,6 +19,7 @@ app.nib = nib;
 app.async = async;
 app.markdown = markdown;
 app.flash = flash;
+app.strftime = strftime;
 app.util = util;
 
 var config = require('./config.js')(app, express, mongoose, stylus, nib);
