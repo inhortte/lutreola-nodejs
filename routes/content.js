@@ -2,10 +2,6 @@ var md = require('node-markdown').Markdown;
 var general = require('./general');
 
 module.exports = function() {
-  app.get('/', function(req, res) {
-    res.redirect('/news');
-  });
-
   app.get('/content/home', function(req, res) {
     res.redirect('/');
   });

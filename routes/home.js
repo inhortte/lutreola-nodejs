@@ -2,6 +2,10 @@ var general = require('./general');
 
 module.exports = function() {
   app.get('/', function(req, res) {
+    res.redirect('/news');
+  });
+
+  app.get('/', function(req, res) {
     console.log(JSON.stringify(req.session));
     if(app.requireAuth === true && req.loggedIn === false)
       res.redirect('/auth/twitter');
