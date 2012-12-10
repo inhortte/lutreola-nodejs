@@ -372,5 +372,105 @@ module.exports = function() {
       }
     });
   });
+
+  app.get('/admin/news/:id', function(req, res) {
+    app.async.waterfall([
+      function(callback) {
+	general.beforeEach(req);
+	beforeEach(req, res);
+	callback(null);
+      },
+      function(callback) {
+	general.getBreadcrumbs(req, function(bc) {
+	  callback(null, bc);
+	});
+      },
+      // Get News
+      function(bc, callback) {
+	general.getNews(req.params.id, function(news) {
+	  callback(null, bc, news);
+	});
+      }
+    ], function(err, bc, news) {
+      res.render('admin/news', {
+	admin_page: true
+	, title: 'Update news item'
+	, breadcrumbs: bc
+	, flash: req.flash()
+	, id: news._id
+	, news: news
+	, created_at: app.strftime('%Y-%m-%d %H:%M', news.created_at)
+	, member: req.session.member
+      });
+    });
+  });
+
+  app.get('/admin/news', function(req, res) {
+    app.async.waterfall([
+      function(callback) {
+	general.beforeEach(req);
+	beforeEach(req, res);
+	callback(null);
+      },
+      function(callback) {
+	general.getBreadcrumbs(req, function(bc) {
+	  callback(null, bc);
+	});
+      },
+    ], function(err, bc) {
+      res.render('admin/news', {
+	admin_page: true
+	, title: "New News Item"
+	, breadcrumbs: bc
+	, flash: req.flash()
+	, member: req.session.member
+      });
+    });
+  });
+
+  app.post('/admin/news', function(req, res) {
+    app.async.waterfall([
+      function(callback) {
+	beforeEach(req, res);
+	callback(null);
+      },
+    ], function(err) {
+      if(typeof req.body.id !== 'undefined') {
+	var id = req.body.id;
+	delete req.body.id;
+	try {
+	  req.body.created_at = new Date(Date.parse(req.body.created_at));
+	} catch (err) {
+	  req.body.created_at = new Date();
+	}
+	app.models.news.findOneAndUpdate({_id:id}, req.body, function(err, menu) {
+	  if(err) {
+	    req.flash('error', 'The news item was not updated. Please put another naarits in my backpack.');
+	  } else {
+	    req.flash('notice', 'The news item was updated! But there are only two naaritsad in my backpack.');
+	  }
+	  res.redirect('/admin/news/' + id);
+	});
+      } else {
+	general.getLastNewsId(function(id) {
+	  req.body._id = id + 1;
+	  req.body.created_at = new Date();
+	  console.log("Trying to save...");
+	  console.log(JSON.stringify(req.body));
+	  var new_news = app.models.news(req.body);
+	  new_news.save(function(err) {
+	    if(err) {
+	      console.log(JSON.stringify(err));
+	      req.flash('error', 'The news item could not be created. Sounds like a personal problem.');
+	    } else {
+	      req.flash('notice', 'The news item was created. Praise Allah!');
+	    }
+	    res.redirect('/admin/news/' + (id + 1));
+	  });
+	});
+      }
+    });
+  });
+
 }
 

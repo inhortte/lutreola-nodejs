@@ -1,0 +1,35 @@
+extends ../layout
+
+block content
+  form(action = "/admin/news", method = "post", enctype = "multipart/form-data")
+    if typeof id !== 'undefined'
+      input(type = "hidden", name = "id", value = id)
+    p
+      label(for = "subject") Subject
+      input(type = "text", name = "subject", size = 80, value = typeof news === 'undefined' ? '' : news.subject)
+    p
+      label(for = "image")
+        | Associated Image (Optional)
+      input(type = "file", name = "image")
+    p
+      label(for = "en")
+        | English Text
+      br
+      textarea(rows = 10, cols = 100, name = "en")
+        if typeof news !== 'undefined'
+          = news.en
+    p
+      label(for = "ee")
+        | Estonian Text
+      br
+      textarea(rows = 10, cols = 100, name = "ee")
+        if typeof news !== 'undefined'
+          = news.ee
+    if typeof id !== 'undefined'
+      p
+        label(for = "created_at")
+          | Creation date
+        br
+        input(type = "text", name = "created_at", value = created_at)
+    p
+      input(type = "submit", value = "Save")

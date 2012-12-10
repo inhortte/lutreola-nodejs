@@ -29,6 +29,7 @@ app.models.member = require('./models/member')(mongoose).model
 app.models.entry_menu = require('./models/entry_menu.js')(mongoose).model
 app.models.menu = require('./models/menu.js')(mongoose).model
 app.models.entry = require('./models/entry.js')(mongoose).model
+app.models.news = require('./models/news.js')(mongoose).model
 
 // routes
 
@@ -48,6 +49,7 @@ app.twit = new twitter({
 
 app.listen(app.get('port'));
 
+/* Twitter stream - non-functional
 io.on('connection', function(socket) {
   app.twit.stream('user', {track:'inhortte'},
     function(stream) {
@@ -57,4 +59,5 @@ io.on('connection', function(socket) {
       });
     });
 });
+*/
 

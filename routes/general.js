@@ -114,6 +114,28 @@ function getLastMenuId(callback) {
 }
 exports.getLastMenuId = getLastMenuId;
 
+function getNews(news_id, callback) {
+  app.models.news.findOne((news_id ? {_id:news_id} : {}),
+			  null, {sort: {_id: -1}},
+			  function(err, news) {
+			    callback(news);
+			  });
+}
+exports.getNews = getNews;
+
+function getLastNewsId(callback) {
+  getNews(null, function(news) {
+    var id;
+    if(news == null) {
+      id = 0;
+    } else {
+      id = news._id;
+    }
+    callback(id);
+  });
+}
+exports.getLastNewsId = getLastNewsId;
+
 function getMenu(menu_id, callback) {
   if(menu_id) {
     app.models.menu.findOne((menu_id ? {_id:menu_id} : {name:'home'}),
