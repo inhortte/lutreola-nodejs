@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  #news_items
+    each item in news_items
+      .itemhead
+        .date
+          = item.date
+        .subject
+          = item.subject
+      .itembody
+        = item.body
+      br.clear
+      br.clear
+      
+      

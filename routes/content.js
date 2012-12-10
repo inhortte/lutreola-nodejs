@@ -2,6 +2,10 @@ var md = require('node-markdown').Markdown;
 var general = require('./general');
 
 module.exports = function() {
+  app.get('/', function(req, res) {
+    res.redirect('/news');
+  });
+
   app.get('/content/home', function(req, res) {
     res.redirect('/');
   });
@@ -30,14 +34,9 @@ module.exports = function() {
       // console.log(JSON.stringify(req.session));
       app.async.parallel({
 	entry_menus: function(callback) {
-	  app.models.entry_menu
-	    .find({menu_id:menu_id}, null,
-		  {sort: {ordr: 1}}, function(err, entry_menus) {
-		    app.async.map(entry_menus, general.subMenus,
-				  function(err, entry_menus) {
-				    callback(null, entry_menus);
-				  });
-		  });
+	  general.getEntryMenus(menu_id, function(entry_menus) {
+	    callback(null, entry_menus);
+	  });
 	},
 	entry: function(callback) {
 	  app.models.entry

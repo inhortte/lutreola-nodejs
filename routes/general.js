@@ -1,5 +1,8 @@
 var url = require('url');
 
+var strftime = '%d/%m/%Y %H:%M';
+exports.strftime = strftime;
+
 exports.adminPage = function(req) {
   var re = /\/admin/;
   return re.exec(req.url);
@@ -12,6 +15,11 @@ exports.adminLoginPage = function(req) {
 
 exports.galleryPage = function(req) {
   var re = /\/gallery/;
+  return re.exec(req.url);
+}
+
+exports.newsPage = function(req) {
+  var re = /\/news/;
   return re.exec(req.url);
 }
 
@@ -43,7 +51,7 @@ function getTweets(callback) {
     // console.log(tweets[0]);
     app.async.map(tweets, function(tweet, callback) {
       tw = {
-	created_at: app.strftime('%d/%m/%Y %H:%M', tweet.created_at)
+	created_at: app.strftime(strftime, tweet.created_at)
 	, text: tweet.text
       };
       callback(null, tw);
@@ -158,6 +166,18 @@ function getMenuByName(name, callback) {
     });
 }
 exports.getMenuByName = getMenuByName;
+
+function getEntryMenus(menu_id, callback) {
+  app.models.entry_menu
+    .find({menu_id:menu_id}, null,
+          {sort: {ordr: 1}}, function(err, entry_menus) {
+            app.async.map(entry_menus, subMenus,
+                          function(err, entry_menus) {
+                            callback(entry_menus);
+                          });
+          });
+}
+exports.getEntryMenus = getEntryMenus;
 
 // sort_by is a string - the name of the field to sort by.
 function getEntryMenusByEntry(entry, sort_by, callback) {
@@ -314,7 +334,9 @@ function getTheDoc(obj, sub_obj, sub_obj_key, callback) {
 }
 exports.getTheDoc = getTheDoc;
 
-exports.subMenus = function(entry_menu, callback) {
+
+
+function subMenus(entry_menu, callback) {
   app.async.waterfall([
     // Get the indicated entry.
     function(callback) {
@@ -345,6 +367,7 @@ exports.subMenus = function(entry_menu, callback) {
 	      });
   });
 }
+exports.subMenus = subMenus;
 
 function setMember(req, member, callback) {
   var memberish = {};
@@ -386,6 +409,8 @@ exports.beforeEach = function(req) {
   } else {
     // req.session.breadcrumbs = JSON.stringify([4]);
   }
+  // language
+  req.session.lang = 'en';
 }
 
 exports.beforeEachContent = function(req) {
@@ -401,6 +426,10 @@ exports.getBreadcrumbs = function(req, callback) {
     callback("<strong>You are an administrator, sir.</strong>" + backOrHome(req));
   } else if(this.galleryPage(req)) {
     callback("You are in the gallery, sir.");
+  } else if(this.newsPage(req)) {
+    this.getHomeId(function(id) {
+      callback("<a href=\"/content/" + id + "\">home</a>");
+    });
   } else {
     getEntry(req.session.current_entry, req, function(entry) {
       m = getMenu(entry.main_menu, function(menu) {
