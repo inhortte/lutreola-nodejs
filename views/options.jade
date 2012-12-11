@@ -2,8 +2,11 @@
   ul
     each me in entry_menus
       li
-        a(href = "/content/#{me.entry_id}")
-          = me.title
+        if me.link
+          a(href = me.url)= me.title
+        else
+          a(href = "/content/#{me.entry_id}")
+            = me.title
         - if(me.submenus.length > 0)
           ul
             each me_dd in me.submenus

@@ -176,11 +176,26 @@ function getEntryMenus(menu_id, callback) {
   app.models.entry_menu
     .find({menu_id:menu_id}, null,
           {sort: {ordr: 1}}, function(err, entry_menus) {
-            app.async.map(entry_menus, subMenus,
-                          function(err, entry_menus) {
-                            callback(entry_menus);
-                          });
-          });
+            app.async.map(entry_menus, function(em, callback) {
+	      app.models.entry
+		.findOne({_id:em.entry_id}, function(err, e) {
+		  if(e && e.role == 'Link') {
+		    callback(null, {
+		      title: em.title
+		      , link: true
+		      , url: e.url
+		      , submenus: []
+		    });
+		  } else {
+		    subMenus(em, function(err, ems) {
+		      callback(null, ems);
+		    });
+		  }
+		});
+	    }, function(err, entry_menus) {
+              callback(entry_menus);
+            });
+	  });
 }
 exports.getEntryMenus = getEntryMenus;
 
@@ -351,9 +366,8 @@ function subMenus(entry_menu, callback) {
 	});
     },
     function(entry, callback) {
-      // console.log('checking this entry out:\n' + entry);
-      if(entry.main_menu != entry_menu.menu_id) {
-//	 entry.type == 'Page') { For some reason, this does not work...
+      if(entry.main_menu != entry_menu.menu_id &&
+	entry.role != 'Link') {
 	app.models.entry_menu
 	  .find({menu_id:entry.main_menu}, null,
 		{sort: {ordr: 1}}, function(err, entry_menus) {
