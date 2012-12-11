@@ -410,6 +410,20 @@ form.admin_form p {
   padding: 0;
   width: 15px;
 }
+#page_links #pages {
+  float: left;
+}
+#page_links #pages ul {
+  list-style: none;
+}
+#page_links #pages ul li {
+  display: inline;
+  padding: 0 10px 0 0;
+}
+#page_links #page {
+  float: right;
+  font-weight: bold;
+}
 #news_items .itemhead {
 		font-size: 70%;
 		font-weight: bold;

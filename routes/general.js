@@ -145,14 +145,11 @@ function getLastNewsId(callback) {
 exports.getLastNewsId = getLastNewsId;
 
 function getMenu(menu_id, callback) {
-  if(menu_id) {
-    app.models.menu.findOne((menu_id ? {_id:menu_id} : {name:'home'}),
-			    function(err, menu) {
-			      callback(menu);
-			    });
-  } else {
-    callback(null);
-  }
+  app.models.menu
+    .findOne((menu_id ? {_id:menu_id} : {name:'home'}),
+	     function(err, menu) {
+	       callback(menu);
+	     });
 }
 exports.getMenu = getMenu;
 
@@ -427,8 +424,8 @@ exports.getBreadcrumbs = function(req, callback) {
   } else if(this.galleryPage(req)) {
     callback("You are in the gallery, sir.");
   } else if(this.newsPage(req)) {
-    this.getHomeId(function(id) {
-      callback("<a href=\"/content/" + id + "\">home</a>");
+    getMenu(null, function(m) {
+      callback("<a href=\"/content/" + m.default_page_id + "\">home</a> -&gt; news");
     });
   } else {
     getEntry(req.session.current_entry, req, function(entry) {

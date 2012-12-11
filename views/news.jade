@@ -1,6 +1,17 @@
 extends layout
 
 block content
+  #page_links
+    #pages
+      ul
+        each p in pages
+          li
+            a(href = "/news?page=#{p}")= p
+    #page
+      = "Page "
+      = page
+  br.clear
+  br.clear
   #news_items
     each item in news_items
       .itemhead
