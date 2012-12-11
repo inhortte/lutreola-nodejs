@@ -19,8 +19,14 @@ block content
           = item.date
         .subject
           = item.subject
+        - if(member)
+          | &nbsp; &nbsp; &nbsp;
+          a(href = "/admin/news/#{item.id}") edit
+          | &nbsp; | &nbsp
+          a.confirm(href = "/admin/news/#{item.id}/delete") delete
       .itembody
-        = item.body
+        != item.body
+        a(href = "/news/#{item.id}") [more]
       br.clear
       br.clear
       

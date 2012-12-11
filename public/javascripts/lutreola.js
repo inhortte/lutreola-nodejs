@@ -28,13 +28,17 @@ function collToGallery(gallery, coll_id) {
 }
 
 $(document).ready(function() {
-  var $container = $('ul.tweets'),
-  socket = io.connect('http://localhost:3000'),
-  template = $('#tweetTemplate');
+  //var $container = $('ul.tweets'),
+  //socket = io.connect('http://localhost:3000'),
+  //template = $('#tweetTemplate');
    
-  socket.on('twitter', function(data) {
-    $container.append(template.render(data));
-  }
+  //socket.on('twitter', function(data) {
+    //$container.append(template.render(data));
+  //});
+
+  $(".confirm").on('click', function() {
+    return confirm('Are you sure?');
+  });
 
     $("a[id^='flag']").click(function() {
 	var which = this.id.substr(5);

@@ -1,5 +1,6 @@
 var md = require('node-markdown').Markdown;
 var general = require('./general');
+var truncate_length = 200;
 
 module.exports = function() {
   app.get('/news', function(req, res) {
@@ -28,10 +29,11 @@ module.exports = function() {
 		function(err, news_items) {
 		  app.async.map(news_items, function(item, callback) {
 		    var ni = {
-		      date: app.strftime(general.strftime, item.created_at)
+		      id: item._id
+		      , date: app.strftime(general.strftime, item.created_at)
 		      , subject: item.subject
-		      , body: item[req.session.lang]
-		    }
+		      , body: general.truncate(md(item[req.session.lang].toString()), truncate_length)
+		    };
 		    callback(null, ni);
 		  }, function(err, news_items) {
 		    callback(null, news_items);
@@ -62,6 +64,64 @@ module.exports = function() {
 	, page: req.body.page ? req.body.page : 1
 	, pages: results.pages
 	, title: "Lutreola News"
+	, breadcrumbs: results.bc
+	, flash: req.flash()
+	, tweets: results.tweets
+	, entry_menus: results.entry_menus
+	, member: req.session.member
+      });
+    });
+  });
+
+  app.get('/news/:id', function(req, res) {
+    app.async.parallel({
+      be: function(callback) {
+	general.beforeEach(req);
+	callback(null);
+      },
+      bc: function(callback) {
+	general.getBreadcrumbs(req, function(bc) {
+	  callback(null, bc);
+	});
+      },
+      tweets: function(callback) {
+	general.getTweets(function(tweets) {
+	  callback(null, tweets);
+	});
+      },
+      // get news item
+      item: function(callback) {
+	app.models.news
+	  .findOne({_id:req.params.id}, function(err, item) {
+	    if(err) {
+	      console.log(err);
+	      res.redirect('/news');
+	    }
+	    if(item == null) {
+	      flash('error', 'That news item does not exist. Try again!');
+	      res.redirect('/news');
+	    }
+	    var ni = {
+	      id: item._id
+	      , date: app.strftime(general.strftime, item.created_at)
+	      , subject: item.subject
+	      , body: md(item[req.session.lang].toString())
+	    };
+	    callback(null, ni);
+	  });
+      },
+      entry_menus: function(callback) {
+	general.getHomeId(function(menu_id) {
+	  general.getEntryMenus(menu_id, function(entry_menus) {
+	    callback(null, entry_menus);
+	  });
+	});
+      }
+    }, function(err, results) {
+      res.render('news_item', {
+	admin_page: false
+	, item: results.item
+	, title: ''
 	, breadcrumbs: results.bc
 	, flash: req.flash()
 	, tweets: results.tweets

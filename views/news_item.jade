@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  #news_item
+    h3
+      = item.subject
+    #date
+      = item.date
+    #body
+      != item.body
+  #share
+    | Share...

@@ -18,11 +18,13 @@ header-font-family = 'Quicksand'
 font-size = 14px
 menu-font-size = 12px
 header-font-size = 16px
+news-subject-fs = 18px
 footer-font-size = 10px
 body-bg-color = #333
 body-text-color = #ccc
 link-color = #f8de08
 heading-color = #568025
+date-color = red
 header-bg-color = #eee
 hlavni-bg-color = #333
 breadcrumb-bg-color = #333
@@ -58,7 +60,7 @@ a
 img
   border 0
 
-h1, h3, h4, h5, h6
+h1, h4, h5, h6
   color heading-color
   margin-bottom 0
 
@@ -186,6 +188,10 @@ h2
   padding 10px 10px 10px 10px
   margin-bottom 10px
 
+#content
+	height 471px
+	overflow auto
+
 #lutreola_help, #gallery_img_link, .misc_photo_link
   img
     width 100%
@@ -310,6 +316,8 @@ form.admin_form
 		float right
 		font-weight bold
 
+// news
+
 @css {
 	#news_items .itemhead {
 		font-size: 70%;
@@ -327,6 +335,19 @@ form.admin_form
   }
 }
 
+// news subject
+h3
+	color heading-color
+	font-weight bold
+	font-size news-subject-fs
+	margin-bottom 20px
+
+#news_item
+	#date
+		font-style italic
+		color date-color
+		font-size smaller
+		margin-bottom 10px
 
 
 #dropdown {
@@ -420,12 +441,12 @@ form.admin_form
       	width 80%
       	float right
       	color body-text-color
-      	font-size footer-font-size
+
 			.date
 				width 100px
 				float left
 				font-size footer-font-size
-				color red
+				color date-color
 
 #photo_gallery
   .thumbnail

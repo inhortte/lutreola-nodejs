@@ -126,7 +126,6 @@ img {
   border: 0;
 }
 h1,
-h3,
 h4,
 h5,
 h6 {
@@ -269,6 +268,10 @@ h2 {
   border: 2px solid #4ac;
   padding: 10px 10px 10px 10px;
   margin-bottom: 10px;
+}
+#content {
+  height: 471px;
+  overflow: auto;
 }
 #lutreola_help img,
 #gallery_img_link img,
@@ -438,6 +441,18 @@ form.admin_form p {
 		clear: both;
 		padding-top: 10px;
 }
+h3 {
+  color: #568025;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+#news_item #date {
+  font-style: italic;
+  color: #f00;
+  font-size: smaller;
+  margin-bottom: 10px;
+}
 #dropdown {
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(239,239,239,0)), color-stop(1, #bbb));
   background: -webkit-linear-gradient(top, rgba(239,239,239,0) 0%, #bbb 100%);
@@ -518,7 +533,6 @@ form.admin_form p {
   width: 80%;
   float: right;
   color: #ccc;
-  font-size: 10px;
 }
 #tweets .date {
   width: 100px;

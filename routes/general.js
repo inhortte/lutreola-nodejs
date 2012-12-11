@@ -23,6 +23,15 @@ exports.newsPage = function(req) {
   return re.exec(req.url);
 }
 
+exports.truncate = function(s, n) {
+  var ts;
+  
+  if(s.toString().length > n) {
+    ts = s.toString().substr(0, n) + "..."
+  }
+  return ts;
+}
+
 function backOrHome(req) {
   var thurk = "";
   if(req.session.current_entry) {
@@ -425,7 +434,7 @@ exports.getBreadcrumbs = function(req, callback) {
     callback("You are in the gallery, sir.");
   } else if(this.newsPage(req)) {
     getMenu(null, function(m) {
-      callback("<a href=\"/content/" + m.default_page_id + "\">home</a> -&gt; news");
+      callback("<a href=\"/content/" + m.default_page_id + "\">home</a> -&gt; <a href=\"/news\">news</a>");
     });
   } else {
     getEntry(req.session.current_entry, req, function(entry) {
