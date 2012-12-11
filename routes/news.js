@@ -32,7 +32,7 @@ module.exports = function() {
 		      id: item._id
 		      , date: app.strftime(general.strftime, item.created_at)
 		      , subject: item.subject
-		      , body: general.truncate(md(item[req.session.lang].toString()), truncate_length)
+		      , body: general.truncate(item[req.session.lang].toString(), truncate_length)
 		    };
 		    callback(null, ni);
 		  }, function(err, news_items) {
@@ -105,7 +105,7 @@ module.exports = function() {
 	      id: item._id
 	      , date: app.strftime(general.strftime, item.created_at)
 	      , subject: item.subject
-	      , body: md(item[req.session.lang].toString())
+	      , body: item[req.session.lang].toString()
 	    };
 	    callback(null, ni);
 	  });

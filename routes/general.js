@@ -24,8 +24,7 @@ exports.newsPage = function(req) {
 }
 
 exports.truncate = function(s, n) {
-  var ts;
-  
+  var ts = s.toString();
   if(s.toString().length > n) {
     ts = s.toString().substr(0, n) + "..."
   }

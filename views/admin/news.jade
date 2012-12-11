@@ -1,6 +1,7 @@
 extends ../layout
 
 block content
+  link(type = "text/stylesheet", rel = "stylesheet", href = "/stylesheets/wysihtml5/blergh.css")
   form(action = "/admin/news", method = "post", enctype = "multipart/form-data")
     if typeof id !== 'undefined'
       input(type = "hidden", name = "id", value = id)
@@ -13,18 +14,13 @@ block content
       input(type = "file", name = "image")
     p
       label(for = "en")
-        | English Text
+        | The News....
       br
-      textarea(rows = 10, cols = 100, name = "en")
+      div(id = "toolbar", style = "display: none;")
+        include toolbar.html
+      textarea#texten(name = "en")
         if typeof news !== 'undefined'
           = news.en
-    p
-      label(for = "ee")
-        | Estonian Text
-      br
-      textarea(rows = 10, cols = 100, name = "ee")
-        if typeof news !== 'undefined'
-          = news.ee
     if typeof id !== 'undefined'
       p
         label(for = "created_at")
@@ -33,3 +29,10 @@ block content
         input(type = "text", name = "created_at", value = created_at)
     p
       input(type = "submit", value = "Save")
+
+  script
+    var editor = new wysihtml5.Editor("texten", {
+      toolbar: "toolbar",
+      parserRules:  wysihtml5ParserRules,
+      stylesheets: "/stylesheets/wysihtml5/stylesheet.css"
+    });
