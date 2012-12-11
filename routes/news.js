@@ -8,6 +8,7 @@ module.exports = function() {
     app.async.parallel({
       be: function(callback) {
 	general.beforeEach(req);
+	general.beforeEachContent(req);
 	callback(null);
       },
       bc: function(callback) {

@@ -37,19 +37,19 @@ module.exports = function() {
 	entry: function(callback) {
 	  app.models.entry
 	    .findOne({_id:req.params.id}, function(err, entry) {
-	      // console.log(entry);
 	      callback(null, entry);
 	    });
 	},
 	breadcrumbs: function(callback) {
 	  general.getBreadcrumbs(req, function(bc) {
+	    console.log("got breadcrumbs:" + bc);
 	    callback(null, bc);
 	  });
 	}
       }, function(err, results) {
 	res.render('content', {
-	  admin_page: general.adminPage(req)
-	  , text: md(results.entry.en.toString())
+	  admin_page: false
+	  , text: results.entry.en.toString()
 	  , entry: results.entry
 	  , entry_menus: results.entry_menus
 	  , title: results.entry.title

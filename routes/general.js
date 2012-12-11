@@ -161,6 +161,19 @@ function getMenu(menu_id, callback) {
 }
 exports.getMenu = getMenu;
 
+function getMenuForBreadcrumbs(menu_id, callback) {
+  if(menu_id) {
+    app.models.menu
+      .findOne({_id:menu_id},
+	       function(err, menu) {
+		 callback(menu);
+	       });
+  } else {
+    callback(null);
+  }
+}
+exports.getMenuForBreadcrumbs = getMenuForBreadcrumbs;
+
 function getMenuByName(name, callback) {
   app.models.menu
     .findOne({name: name}, function(err, menu) {
@@ -173,17 +186,23 @@ function getMenuByName(name, callback) {
 exports.getMenuByName = getMenuByName;
 
 function getEntryMenus(menu_id, callback) {
-  app.models.entry_menu
-    .find({menu_id:menu_id}, null,
-          {sort: {ordr: 1}}, function(err, entry_menus) {
-            app.async.map(entry_menus, function(em, callback) {
-	      app.models.entry
-		.findOne({_id:em.entry_id}, function(err, e) {
-		  if(e && e.role == 'Link') {
+  app.models.entry
+    .find({role:'Link'}, function(err, links) {
+      app.models.entry_menu
+	.find({menu_id:menu_id}, null,
+              {sort: {ordr: 1}}, function(err, entry_menus) {
+		app.async.map(entry_menus, function(em, callback) {
+		  var is_link = links.some(function(e) {
+		    return(e._id == em.entry_id);
+		  });
+		  if(is_link) {
+		    links = links.filter(function(e) {
+		      return(e._id == em.entry_id);
+		    });
 		    callback(null, {
 		      title: em.title
 		      , link: true
-		      , url: e.url
+		      , url: links[0].url
 		      , submenus: []
 		    });
 		  } else {
@@ -191,11 +210,11 @@ function getEntryMenus(menu_id, callback) {
 		      callback(null, ems);
 		    });
 		  }
+		}, function(err, entry_menus) {
+		  callback(entry_menus);
 		});
-	    }, function(err, entry_menus) {
-              callback(entry_menus);
-            });
-	  });
+	      });
+    });
 }
 exports.getEntryMenus = getEntryMenus;
 
@@ -451,7 +470,7 @@ exports.getBreadcrumbs = function(req, callback) {
     });
   } else {
     getEntry(req.session.current_entry, req, function(entry) {
-      m = getMenu(entry.main_menu, function(menu) {
+      m = getMenuForBreadcrumbs(entry.main_menu, function(menu) {
 	var links = [];
 	var m = menu;
 	app.async.whilst(
@@ -459,7 +478,7 @@ exports.getBreadcrumbs = function(req, callback) {
 	  function(callback) {
 	    var entry_id = m.default_page_id;
 	    links.unshift("<a href=\"/content/" + entry_id + "\">" + m.name + "</a>");
-	    m = getMenu(m.parent_id, function(menu) {
+	    m = getMenuForBreadcrumbs(m.parent_id, function(menu) {
 	      m = menu;
 	      callback();
 	    });
