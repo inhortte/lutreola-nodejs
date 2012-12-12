@@ -42,7 +42,6 @@ module.exports = function() {
 	},
 	breadcrumbs: function(callback) {
 	  general.getBreadcrumbs(req, function(bc) {
-	    console.log("got breadcrumbs:" + bc);
 	    callback(null, bc);
 	  });
 	}

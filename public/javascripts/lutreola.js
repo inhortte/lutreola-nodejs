@@ -82,7 +82,9 @@ $(document).ready(function() {
 	var ids = $("#ems_sortable").sortable("toArray").map(function(el) {
 	    return el.substr(5);
 	}).join(",");
-	this.action = this.action + "?ordr=" + ids;
+	// this.action = this.action + "?ordr=" + ids;
+      $('<input type="hidden" name="ordr" value="' + ids + '" />').appendTo('form#menu_form');
+      this.submit();
     });
 
     // collection
@@ -92,7 +94,9 @@ $(document).ready(function() {
 	var ids = $("#cps_sortable").sortable("toArray").map(function(el) {
 	    return el.substr(5);
 	}).join(",");
-	this.action = this.action + "?ordr=" + ids;
+	// this.action = this.action + "?ordr=" + ids;
+      var ordr = $("<input>").attr("type", "hidden").attr("name", "ordr").value(ids);
+      this.append($(ordr));
     });
 
     // gallery

@@ -1,11 +1,11 @@
 extends ../layout
 
 block content
-  form.admin_form(action = "/admin/menu", method = "post")
+  form#menu_form(action = "/admin/menu", method = "post")
     if typeof id !== 'undefined'
       input(type = "hidden", name = "id", value = id)
     p
-      label(for = "name") Name
+      label(for = "name") Name (this must have NO spaces)
       input(type = "text", name = "name", value = typeof menu === 'undefined' ? '' : menu.name)
     p
       label(for = "parent_id") Parent Menu
@@ -23,11 +23,9 @@ block content
       ul#ems_sortable
         if typeof entry_menus !== 'undefined'
           each em in entry_menus
-            li(class = "ui-state-default", id = "ordr_#{em.entry_id}")
+            li(class = "ui-state-default", id = "ordr_#{em._id}")
               span.ui-icon.ui-icon-arrowthick-2-n-s
               = em.title
-              | (#{em.entry.title})
-              = "(#{em.entry.title})"
           
     p
       input(type = "submit", value = "Save")

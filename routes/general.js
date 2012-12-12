@@ -1,4 +1,5 @@
 var url = require('url');
+var S = require('string');
 
 var strftime = '%d/%m/%Y %H:%M';
 exports.strftime = strftime;
@@ -24,9 +25,9 @@ exports.newsPage = function(req) {
 }
 
 exports.truncate = function(s, n) {
-  var ts = s.toString();
-  if(s.toString().length > n) {
-    ts = s.toString().substr(0, n) + "..."
+  var ts = S(s.toString()).stripTags().s;
+  if(ts.length > n) {
+    ts = S(ts).truncate(n).s
   }
   return ts;
 }
@@ -185,6 +186,7 @@ function getMenuByName(name, callback) {
 }
 exports.getMenuByName = getMenuByName;
 
+// This is a very specific function and should not be used arbitrarily!
 function getEntryMenus(menu_id, callback) {
   app.models.entry
     .find({role:'Link'}, function(err, links) {
@@ -192,17 +194,14 @@ function getEntryMenus(menu_id, callback) {
 	.find({menu_id:menu_id}, null,
               {sort: {ordr: 1}}, function(err, entry_menus) {
 		app.async.map(entry_menus, function(em, callback) {
-		  var is_link = links.some(function(e) {
+		  var rlinks = links.filter(function(e) {
 		    return(e._id == em.entry_id);
 		  });
-		  if(is_link) {
-		    links = links.filter(function(e) {
-		      return(e._id == em.entry_id);
-		    });
+		  if(rlinks.length > 0) {
 		    callback(null, {
 		      title: em.title
 		      , link: true
-		      , url: links[0].url
+		      , url: rlinks[0].url
 		      , submenus: []
 		    });
 		  } else {

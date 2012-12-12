@@ -14,4 +14,10 @@ block content
               | &nbsp(
               = entry_menu.title
               | )
+    li.menu Orphans
+    ul
+      each orphan in orphans
+        li.entry_menu
+          a(href = "/admin/entry/#{orphan._id}")
+            = orphan.title
               

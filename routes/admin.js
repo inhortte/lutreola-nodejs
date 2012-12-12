@@ -70,8 +70,26 @@ module.exports = function() {
 	general.getBreadcrumbs(req, function(bc) {
 	  callback(null, bc);
 	});
+      },
+      // get orphans
+      function(bc, callback) {
+	var orphans = [];
+	app.models.entry
+	  .find({}, function(err, entries) {
+	    app.async.forEach(entries, function(entry, callback) {
+	      app.models.entry_menu
+		.findOne({entry_id:entry._id}, function(err, em) {
+		  if(!em) {
+		    orphans.push(entry);
+		  }
+		  callback(null);
+		});
+	    }, function(err) {
+	      callback(null, bc, orphans);
+	    });
+	  });
       }
-    ], function(err, bc) {
+    ], function(err, bc, orphans) {
       app.models.menu
 	.find({}, null, {sort: {_id: 1}}, function(err, menus) {
 	  var menus_with_entry_menus = [];
@@ -97,6 +115,7 @@ module.exports = function() {
 				, breadcrumbs: bc
 				, flash: req.flash()
 				, menus: menus_with_entry_menus
+				, orphans: orphans
 				, member: req.session.member
 			      });
 			    });
@@ -213,7 +232,11 @@ module.exports = function() {
 	});
       }
     ], function(err, mts, menu) {
-      req.body.main_menu = menu._id;
+      if(menu) {
+	req.body.main_menu = menu._id;
+      } else {
+	req.body.main_menu = null;
+      }
       if(typeof req.body.id !== 'undefined') {
 	// req.body._id = req.body.id;
 	var id = req.body.id;
@@ -283,7 +306,15 @@ module.exports = function() {
 	  callback(null, bc, menu, menu_select_by_id, page_select);
 	});
       },
-    ], function(err, bc, menu, menu_select_by_id, page_select) {
+      function(bc, menu, menu_select_by_id, page_select, callback) {
+	app.models.entry_menu
+	  .find({menu_id:menu._id}, null, {sort: {ordr: 1}},
+		function(err, entry_menus) {
+		  callback(null, bc, menu, menu_select_by_id,
+			   page_select, entry_menus);
+		});
+      }
+    ], function(err, bc, menu, menu_select_by_id, page_select, entry_menus) {
       res.render('admin/menu', {
 	admin_page: true
 	, title: "Update menu" 
@@ -293,6 +324,7 @@ module.exports = function() {
 	, menu: menu
 	, menu_select_by_id: menu_select_by_id
 	, page_select: page_select
+	, entry_menus: entry_menus
 	, member: req.session.member
       });
     });
@@ -321,7 +353,7 @@ module.exports = function() {
 	general.makePageSelect(null, function(page_select) {
 	  callback(null, bc, menu_select_by_id, page_select);
 	});
-      },
+      }
     ], function(err, bc, menu_select_by_id, page_select) {
       res.render('admin/menu', {
 	admin_page: true
@@ -344,13 +376,24 @@ module.exports = function() {
     ], function(err) {
       if(typeof req.body.id !== 'undefined') {
 	var id = req.body.id;
+	var ordr = req.body.ordr;
 	delete req.body.id;
+	delete req.body.ordr;
 	app.models.menu.findOneAndUpdate({_id:id}, req.body, function(err, menu) {
 	  if(err) {
 	    req.flash('error', 'The menu was not updated. Please fix me a bowl of soup.');
 	  } else {
 	    req.flash('notice', 'The menu was updated! But my foot still hurts.');
 	  }
+	  ordr.split(',').forEach(function(e,i,a) {
+	    app.models.entry_menu
+	      .findOneAndUpdate({_id:e}, {ordr:(i + 1)}, function(err, em) {
+		if(err) {
+		  console.log(err);
+		}
+		console.log(em);
+	      });
+	  });
 	  res.redirect('/admin/menu/' + id);
 	});
       } else {

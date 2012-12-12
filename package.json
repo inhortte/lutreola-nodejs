@@ -20,7 +20,8 @@
     "util": "*",
     "ntwitter": "*",
     "socket.io": "*",
-    "strftime": "*"
+    "strftime": "*",
+    "string": "*"
   },
   "engines": {
     "node": "0.8.12",
