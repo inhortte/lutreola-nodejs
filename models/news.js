@@ -4,6 +4,7 @@ module.exports = function(mongoose) {
   var schema = new Schema({
     _id: Number,
     subject: String,
+    image: String,
     en: Buffer,
     ee: Buffer,
     created_at: Date

@@ -13,20 +13,22 @@ module.exports = function() {
     app.async.waterfall([
       function(callback) {
 	general.beforeEach(req);
-	callback(null);
+	general.getNewsImages(function(news_images) {
+	  callback(null, news_images);
+	});	
       },
-      function(callback) {
+      function(news_images, callback) {
 	general.beforeEachContent(req);
 	general.getTweets(function(tweets) {
-	  callback(null, tweets);
+	  callback(null, news_images, tweets);
 	});
       },
-      function(tweets, callback) {
+      function(news_images, tweets, callback) {
 	general.getEntry(req.params.id, req, function(entry) {
-	  callback(null, tweets, entry.main_menu);
+	  callback(null, news_images, tweets, entry.main_menu);
 	});
       }
-    ], function(err, tweets, menu_id) {
+    ], function(err, news_images, tweets, menu_id) {
       // console.log(JSON.stringify(req.session));
       app.async.parallel({
 	entry_menus: function(callback) {
@@ -55,6 +57,7 @@ module.exports = function() {
 	  , breadcrumbs: results.breadcrumbs
 	  , flash: req.flash()
 	  , tweets: tweets
+	  , news_images: news_images
 	  , member: req.session.member
 	});
       });

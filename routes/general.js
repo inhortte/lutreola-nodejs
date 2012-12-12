@@ -32,6 +32,12 @@ exports.truncate = function(s, n) {
   return ts;
 }
 
+exports.rndFileName = function() {
+  return [0,1,2,3,4,5,6,7,8,9,0].map(function(e) {
+    return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+  }).join('');
+}
+
 function backOrHome(req) {
   var thurk = "";
   if(req.session.current_entry) {
@@ -70,6 +76,15 @@ function getTweets(callback) {
   });
 }
 exports.getTweets = getTweets;
+
+function getNewsImages(callback) {
+  app.models.news
+    .find({image: {$ne: null}}, null, {sort: {_id: -1}, limit: 3},
+	  function(err, news_items) {
+	    callback(news_items);
+	  });
+}
+exports.getNewsImages = getNewsImages;
 
 function getHomeId(callback) {
   app.models.menu.findOne({name:'home'}, function(err, data) {

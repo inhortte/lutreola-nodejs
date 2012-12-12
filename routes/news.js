@@ -6,10 +6,12 @@ module.exports = function() {
   app.get('/news', function(req, res) {
     var page = req.body.page ? 1 : req.body.page;
     app.async.parallel({
-      be: function(callback) {
+      news_images: function(callback) {
 	general.beforeEach(req);
 	general.beforeEachContent(req);
-	callback(null);
+	general.getNewsImages(function(news_images) {
+	  callback(null, news_images);
+	});
       },
       bc: function(callback) {
 	general.getBreadcrumbs(req, function(bc) {
@@ -68,6 +70,7 @@ module.exports = function() {
 	, breadcrumbs: results.bc
 	, flash: req.flash()
 	, tweets: results.tweets
+	, news_images: results.news_images
 	, entry_menus: results.entry_menus
 	, member: req.session.member
       });
@@ -76,9 +79,12 @@ module.exports = function() {
 
   app.get('/news/:id', function(req, res) {
     app.async.parallel({
-      be: function(callback) {
+      news_images: function(callback) {
 	general.beforeEach(req);
-	callback(null);
+	general.beforeEachContent(req);
+	general.getNewsImages(function(news_images) {
+	  callback(null, news_images);
+	});
       },
       bc: function(callback) {
 	general.getBreadcrumbs(req, function(bc) {
@@ -126,6 +132,7 @@ module.exports = function() {
 	, breadcrumbs: results.bc
 	, flash: req.flash()
 	, tweets: results.tweets
+	, news_images: results.news_images
 	, entry_menus: results.entry_menus
 	, member: req.session.member
       });

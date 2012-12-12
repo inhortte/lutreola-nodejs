@@ -1,4 +1,5 @@
 var general = require('./general');
+var im = require('imagemagick');
 
 function beforeEach(req, res) {
   if(!req.session.member) { // should check member.type, also.
@@ -448,6 +449,23 @@ module.exports = function() {
     });
   });
 
+  app.get('/admin/news/:id/delete', function(req, res) {
+    app.models.news
+      .findOne({_id:req.params.id}, function(err, news_item) {
+	if(!err && news_item) {
+	  news_item.remove(function(err, news_item) {
+	    if(err) {
+	      console.log(err);
+	      req.flash('error', 'That item is sticking around, I am afraid.');
+	    } else {
+	      req.flash('notice', '*BOOM*');
+	    }
+	    res.redirect('/news');
+	  });
+	}
+      });
+  });
+
   app.get('/admin/news', function(req, res) {
     app.async.waterfall([
       function(callback) {
@@ -472,12 +490,33 @@ module.exports = function() {
   });
 
   app.post('/admin/news', function(req, res) {
+    if(req.files.image) {
+      // console.log('req.files:' + JSON.stringify(req.files.image));
+    }
     app.async.waterfall([
       function(callback) {
 	beforeEach(req, res);
 	callback(null);
       },
-    ], function(err) {
+      // image
+      function(callback) {
+	if(req.files.image.name.length > 0) {
+	  var img_file = general.rndFileName() + '.jpg';
+	  im.resize({
+	    srcPath: req.files.image.path
+	    , dstPath: process.env.PWD + '/public/images/news/' + img_file
+	    , width: 256
+	  }, function(err, stdout, stderr) {
+	    if(err) {
+	      console.log(err);
+	    }
+	    callback(null, img_file);
+	  });
+	} else {
+	  callback(null, null);
+	}
+      }
+    ], function(err, img_file) {
       if(typeof req.body.id !== 'undefined') {
 	var id = req.body.id;
 	delete req.body.id;
@@ -486,20 +525,25 @@ module.exports = function() {
 	} catch (err) {
 	  req.body.created_at = new Date();
 	}
-	app.models.news.findOneAndUpdate({_id:id}, req.body, function(err, menu) {
-	  if(err) {
-	    req.flash('error', 'The news item was not updated. Please put another naarits in my backpack.');
-	  } else {
-	    req.flash('notice', 'The news item was updated! But there are only two naaritsad in my backpack.');
-	  }
-	  res.redirect('/admin/news/' + id);
-	});
+	app.models.news
+	  .findOne({_id:id}, function(err, news_item) {
+	    if(img_file) {
+	      req.body.image = img_file;
+	    }
+	    news_item.update(req.body, function(err) {
+	      if(err) {
+		req.flash('error', 'The news item was not updated. Please put another naarits in my backpack.');
+	      } else {
+		req.flash('notice', 'The news item was updated! But there are only two naaritsad in my backpack.');
+	      }
+	      res.redirect('/admin/news/' + id);
+	    });
+	  });
       } else {
 	general.getLastNewsId(function(id) {
 	  req.body._id = id + 1;
 	  req.body.created_at = new Date();
-	  console.log("Trying to save...");
-	  console.log(JSON.stringify(req.body));
+	  req.body.image = img_file;
 	  var new_news = app.models.news(req.body);
 	  new_news.save(function(err) {
 	    if(err) {

@@ -21,7 +21,8 @@
     "ntwitter": "*",
     "socket.io": "*",
     "strftime": "*",
-    "string": "*"
+    "string": "*",
+    "imagemagick": "*"
   },
   "engines": {
     "node": "0.8.12",

@@ -8,10 +8,16 @@ block content
     p
       label(for = "subject") Subject
       input(type = "text", name = "subject", size = 80, value = typeof news === 'undefined' ? '' : news.subject)
-    p
-      label(for = "image")
-        | Associated Image (Optional)
-      input(type = "file", name = "image")
+    p.clear
+      #newsimage
+        #input
+          label(for = "image")
+            | Associated Image (Optional)
+          input(type = "file", name = "image")
+        #image
+          if typeof news !== 'undefined' && news.image
+            img(src = "/images/news/#{news.image}", width = 100)
+    br.clear
     p
       label(for = "en")
         | The News....

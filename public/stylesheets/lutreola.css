@@ -441,6 +441,15 @@ form.admin_form p {
 		clear: both;
 		padding-top: 10px;
 }
+#newsimage {
+  clear: both;
+}
+#newsimage #input {
+  float: left;
+}
+#newsimage #image {
+  float: right;
+}
 h3 {
   color: #568025;
   font-weight: bold;
