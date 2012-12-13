@@ -58,8 +58,8 @@ module.exports = function(app, express) {
   //env specific config
   app.configure('development', function(){
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-    // app.mongoose.connect('mongodb://lutreola:mustelid@ds039427.mongolab.com:39427/naaritsad');
-    app.mongoose.connect('mongodb://localhost/naaritsad');
+    app.mongoose.connect('mongodb://lutreola:mustelid@ds039427.mongolab.com:39427/naaritsad');
+    // app.mongoose.connect('mongodb://localhost/naaritsad');
   });
 
   app.configure('production', function(){
