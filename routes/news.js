@@ -45,7 +45,7 @@ module.exports = function() {
       },
       pages: function(callback) {
 	app.models.news.count({}, function(err, c) {
-	  var ps = Math.floor(c / 10);
+	  var ps = Math.floor((c - 1) / 10);
 	  var c_arr = [];
 	  for(i = 0;i <= ps;i++) {
 	    c_arr.push(i + 1);
