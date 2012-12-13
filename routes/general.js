@@ -520,36 +520,45 @@ function getBreadcrumbs(req, callback) {
 }
 
 // aggregate news and content repetitive tasks
-function agTasks(req, callback) {
-  app.async.parallel({
-    news_images: function(callback) {
-      getNewsImages(function(news_images) {
-	callback(null, news_images);
-      });
-    },
-    bc: function(callback) {
-      getBreadcrumbs(req, function(bc) {
-	callback(null, bc);
-      });
-    },
-    tweets: function(callback) {
-      getTweets(function(tweets) {
-	callback(null, tweets);
-      });
-    },    
-    entry_menus: function(callback) {
-      getHomeId(function(menu_id) {
-	getEntryMenus(menu_id, function(entry_menus) {
-	  callback(null, entry_menus);
+function agTasks(req, menu_id, callback) {
+  app.async.waterfall([
+    function(callback) {
+      if(!menu_id) {
+	getHomeId(function(menu_id) {
+	  callback(null, menu_id);
 	});
+      } else {
+	callback(null, menu_id);
+      }
+    }], function(err, menu_id) {
+      app.async.parallel({
+	news_images: function(callback) {
+	  getNewsImages(function(news_images) {
+	    callback(null, news_images);
+	  });
+	},
+	bc: function(callback) {
+	  getBreadcrumbs(req, function(bc) {
+	    callback(null, bc);
+	  });
+	},
+	tweets: function(callback) {
+	  getTweets(function(tweets) {
+	    callback(null, tweets);
+	  });
+	},    
+	entry_menus: function(callback) {
+	  getEntryMenus(menu_id, function(entry_menus) {
+	    callback(null, entry_menus);
+	  });
+	}
+      }, function(err, aggregate) {
+	if(err) {
+	  console.log("Aggregate error:");
+	  console.log(err);
+	}
+	callback(err, aggregate);
       });
-    }
-  }, function(err, aggregate) {
-    if(err) {
-      console.log("Aggregate error:");
-      console.log(err);
-    }
-    callback(err, aggregate);
-  });;
+    });
 }
 exports.agTasks = agTasks;

@@ -8,7 +8,7 @@ module.exports = function() {
     app.async.parallel({
       ag: function(callback) {
 	general.beforeEach(req);
-	general.agTasks(req, function(err, ag) {
+	general.agTasks(req, null, function(err, ag) {
 	  if(err) throw err;
 	  callback(null, ag);
 	});
@@ -63,7 +63,7 @@ module.exports = function() {
     app.async.parallel({
       ag: function(callback) {
 	general.beforeEach(req);
-	general.agTasks(req, function(err, ag) {
+	general.agTasks(req, null, function(err, ag) {
 	  if(err) throw err;
 	  callback(null, ag);
 	});

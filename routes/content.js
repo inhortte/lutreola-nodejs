@@ -13,27 +13,18 @@ module.exports = function() {
     app.async.waterfall([
       function(callback) {
 	general.beforeEach(req);
-	general.getNewsImages(function(news_images) {
-	  callback(null, news_images);
-	});	
-      },
-      function(news_images, callback) {
 	general.beforeEachContent(req);
-	general.getTweets(function(tweets) {
-	  callback(null, news_images, tweets);
-	});
-      },
-      function(news_images, tweets, callback) {
 	general.getEntry(req.params.id, req, function(entry) {
-	  callback(null, news_images, tweets, entry.main_menu);
+	  callback(null, entry.main_menu);
 	});
       }
-    ], function(err, news_images, tweets, menu_id) {
+    ], function(err, menu_id) {
       // console.log(JSON.stringify(req.session));
       app.async.parallel({
-	entry_menus: function(callback) {
-	  general.getEntryMenus(menu_id, function(entry_menus) {
-	    callback(null, entry_menus);
+	ag: function(callback) {
+	  general.agTasks(req, menu_id, function(err, ag) {
+	    if(err) throw err;
+	    callback(null, ag);
 	  });
 	},
 	entry: function(callback) {
@@ -42,22 +33,17 @@ module.exports = function() {
 	      callback(null, entry);
 	    });
 	},
-	breadcrumbs: function(callback) {
-	  general.getBreadcrumbs(req, function(bc) {
-	    callback(null, bc);
-	  });
-	}
       }, function(err, results) {
 	res.render('content', {
 	  admin_page: false
 	  , text: results.entry.en.toString()
 	  , entry: results.entry
-	  , entry_menus: results.entry_menus
+	  , entry_menus: results.ag.entry_menus
 	  , title: results.entry.title
-	  , breadcrumbs: results.breadcrumbs
+	  , breadcrumbs: results.ag.bc
 	  , flash: req.flash()
-	  , tweets: tweets
-	  , news_images: news_images
+	  , tweets: results.ag.tweets
+	  , news_images: results.ag.news_images
 	  , member: req.session.member
 	});
       });
