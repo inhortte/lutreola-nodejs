@@ -1,7 +1,7 @@
 module.exports = function(mongoose) {
   var collection = 'news';
   var Schema = mongoose.Schema;
-  var schema = new Schema({
+  var News = new Schema({
     _id: Number,
     subject: String,
     image: String,
@@ -9,6 +9,11 @@ module.exports = function(mongoose) {
     ee: Buffer,
     created_at: Date
   });
-  this.model = mongoose.model('News', schema, collection);
+  News.static({
+    paginate: function(page, amt, callback) {
+      return this.find({}).sort({_id: -1}).skip(page * amt).limit(amt).exec(callback);
+    }
+  });
+  this.model = mongoose.model('News', News, collection);
   return this;
 }

@@ -4,31 +4,20 @@ var truncate_length = 200;
 
 module.exports = function() {
   app.get('/news', function(req, res) {
-    var page = req.body.page ? 1 : req.body.page;
+    var page = req.query.page ? 1 : req.body.page;
     app.async.parallel({
-      news_images: function(callback) {
+      ag: function(callback) {
 	general.beforeEach(req);
-	general.beforeEachContent(req);
-	general.getNewsImages(function(news_images) {
-	  callback(null, news_images);
-	});
-      },
-      bc: function(callback) {
-	general.getBreadcrumbs(req, function(bc) {
-	  callback(null, bc);
-	});
-      },
-      tweets: function(callback) {
-	general.getTweets(function(tweets) {
-	  callback(null, tweets);
+	general.agTasks(req, function(err, ag) {
+	  if(err) throw err;
+	  callback(null, ag);
 	});
       },
       // get news items according to page
       news_items: function(callback) {
 	app.models.news
-	  .find({}, null, {sort: {_id: -1},
-			   skip: (page * 10),
-			   limit: 10},
+	  .paginate(page, 10,
+	  //.find({}, null, {sort:{_id: -1}, skip: (page * 10), limit: 10},
 		function(err, news_items) {
 		  app.async.map(news_items, function(item, callback) {
 		    var ni = {
@@ -52,26 +41,19 @@ module.exports = function() {
 	  }
 	  callback(null, c_arr);
 	});
-      },
-      entry_menus: function(callback) {
-	general.getHomeId(function(menu_id) {
-	  general.getEntryMenus(menu_id, function(entry_menus) {
-	    callback(null, entry_menus);
-	  });
-	});
       }
     }, function(err, results) {
       res.render('news', {
 	admin_page: false
 	, news_items: results.news_items
-	, page: req.body.page ? req.body.page : 1
+	, page: req.query.page ? req.query.page : 1
 	, pages: results.pages
 	, title: "Lutreola News"
-	, breadcrumbs: results.bc
+	, breadcrumbs: results.ag.bc
 	, flash: req.flash()
-	, tweets: results.tweets
-	, news_images: results.news_images
-	, entry_menus: results.entry_menus
+	, tweets: results.ag.tweets
+	, news_images: results.ag.news_images
+	, entry_menus: results.ag.entry_menus
 	, member: req.session.member
       });
     });
@@ -79,21 +61,11 @@ module.exports = function() {
 
   app.get('/news/:id', function(req, res) {
     app.async.parallel({
-      news_images: function(callback) {
+      ag: function(callback) {
 	general.beforeEach(req);
-	general.beforeEachContent(req);
-	general.getNewsImages(function(news_images) {
-	  callback(null, news_images);
-	});
-      },
-      bc: function(callback) {
-	general.getBreadcrumbs(req, function(bc) {
-	  callback(null, bc);
-	});
-      },
-      tweets: function(callback) {
-	general.getTweets(function(tweets) {
-	  callback(null, tweets);
+	general.agTasks(req, function(err, ag) {
+	  if(err) throw err;
+	  callback(null, ag);
 	});
       },
       // get news item
@@ -116,24 +88,17 @@ module.exports = function() {
 	    };
 	    callback(null, ni);
 	  });
-      },
-      entry_menus: function(callback) {
-	general.getHomeId(function(menu_id) {
-	  general.getEntryMenus(menu_id, function(entry_menus) {
-	    callback(null, entry_menus);
-	  });
-	});
       }
     }, function(err, results) {
       res.render('news_item', {
 	admin_page: false
 	, item: results.item
 	, title: ''
-	, breadcrumbs: results.bc
+	, breadcrumbs: results.ag.bc
 	, flash: req.flash()
-	, tweets: results.tweets
-	, news_images: results.news_images
-	, entry_menus: results.entry_menus
+	, tweets: results.ag.tweets
+	, news_images: results.ag.news_images
+	, entry_menus: results.ag.entry_menus
 	, member: req.session.member
       });
     });

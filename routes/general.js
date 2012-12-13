@@ -4,22 +4,22 @@ var S = require('string');
 var strftime = '%d/%m/%Y %H:%M';
 exports.strftime = strftime;
 
-exports.adminPage = function(req) {
+function adminPage(req) {
   var re = /\/admin/;
   return re.exec(req.url);
 }
 
-exports.adminLoginPage = function(req) {
+function adminLoginPage(req) {
   var re = /\/admin\/login/;
   return re.exec(req.url);
 }
 
-exports.galleryPage = function(req) {
+function galleryPage(req) {
   var re = /\/gallery/;
   return re.exec(req.url);
 }
 
-exports.newsPage = function(req) {
+function newsPage(req) {
   var re = /\/news/;
   return re.exec(req.url);
 }
@@ -90,7 +90,7 @@ function getNewsImages(callback) {
 	      });
 	      callback(null);
 	    }, function(err) {
-	      console.log(JSON.stringify(news_images));
+	      // console.log(JSON.stringify(news_images));
 	      callback(news_images);
 	    });
 	  });
@@ -462,7 +462,8 @@ function getMember(username, callback) {
 exports.getMember = getMember;
 
 exports.beforeEach = function(req) {
-  // breadcrumbs
+  // breadcrumbs - what the fuck is this, anyway?
+  /*
   if(!req.session.breadcrumbs) {
     this.getHomeId(function(id) {
       var a = new Array();
@@ -472,6 +473,7 @@ exports.beforeEach = function(req) {
   } else {
     // req.session.breadcrumbs = JSON.stringify([4]);
   }
+  */
   // language
   req.session.lang = 'en';
 }
@@ -482,14 +484,14 @@ exports.beforeEachContent = function(req) {
   });
 }
 
-exports.getBreadcrumbs = function(req, callback) {
-  if(this.adminLoginPage(req)) {
+function getBreadcrumbs(req, callback) {
+  if(adminLoginPage(req)) {
     callback("<strong>You may soon be an administrator, sir.</strong>" + backOrHome(req));
-  } else if(this.adminPage(req)) {
+  } else if(adminPage(req)) {
     callback("<strong>You are an administrator, sir.</strong>" + backOrHome(req));
-  } else if(this.galleryPage(req)) {
+  } else if(galleryPage(req)) {
     callback("You are in the gallery, sir.");
-  } else if(this.newsPage(req)) {
+  } else if(newsPage(req)) {
     getMenu(null, function(m) {
       callback("<a href=\"/content/" + m.default_page_id + "\">home</a> -&gt; <a href=\"/news\">news</a>");
     });
@@ -517,3 +519,37 @@ exports.getBreadcrumbs = function(req, callback) {
   }
 }
 
+// aggregate news and content repetitive tasks
+function agTasks(req, callback) {
+  app.async.parallel({
+    news_images: function(callback) {
+      getNewsImages(function(news_images) {
+	callback(null, news_images);
+      });
+    },
+    bc: function(callback) {
+      getBreadcrumbs(req, function(bc) {
+	callback(null, bc);
+      });
+    },
+    tweets: function(callback) {
+      getTweets(function(tweets) {
+	callback(null, tweets);
+      });
+    },    
+    entry_menus: function(callback) {
+      getHomeId(function(menu_id) {
+	getEntryMenus(menu_id, function(entry_menus) {
+	  callback(null, entry_menus);
+	});
+      });
+    }
+  }, function(err, aggregate) {
+    if(err) {
+      console.log("Aggregate error:");
+      console.log(err);
+    }
+    callback(err, aggregate);
+  });;
+}
+exports.agTasks = agTasks;
