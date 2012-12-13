@@ -24,14 +24,6 @@ module.exports = function(app, express) {
     app.use(express.session({ secret: 'flavigula',
 			      store: new express.session.MemoryStore({ reapInterval:  60000 * 10 })}));
     app.use(app.flash());
-    /*
-    app.use(function(req, res) {
-      res.locals({
-	member: req.session.member,
-	flash: req.flash()
-      });
-    });
-    */
     app.use(app.stylus.middleware(
       { src: __dirname + '/public'
 	, compile: function(str, path) {
@@ -43,17 +35,8 @@ module.exports = function(app, express) {
     app.use(express.favicon());
     app.use(express.bodyParser());
     app.use(express.methodOverride());
-    //app.use(app.mongooseAuth.middleware());
-    // app.use(app.everyauth.middleware(app));
     app.use(app.router);
   });
-
-  /*
-  app.locals.use(function(req, res) {
-    res.locals.member = req.session.member;
-    res.locals.flash = req.flash();
-  });
-  */
 
   //env specific config
   app.configure('development', function(){

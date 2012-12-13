@@ -13,6 +13,7 @@ var express = require('express')
 app = module.exports = express();
 server = http.createServer(app); // for socket.io
 io = require("socket.io").listen(server);
+app.io = io;
 app.mongoose = mongoose;
 app.stylus = stylus;
 app.nib = nib;
