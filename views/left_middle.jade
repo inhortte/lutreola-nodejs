@@ -1,4 +1,7 @@
 .misc_photo_link
   a(href = "/news/#{news_images[1]._id}")
-    img(src = "/images/news/#{news_images[1].image}")  
+    img(src = "/images/news/#{news_images[1].image}")
+  #caption
+    = news_images[1].subject
+      
 

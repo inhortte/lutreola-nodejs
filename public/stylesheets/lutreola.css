@@ -273,10 +273,39 @@ h2 {
   height: 471px;
   overflow: auto;
 }
-#lutreola_help img,
-#gallery_img_link img,
-.misc_photo_link img {
+#content a {
+  margin-right: 5px;
+}
+#content img {
+  float: right;
+}
+#content p,
+#content br {
+  margin-bottom: 10px;
+}
+#lutreola_help,
+#gallery_img_link,
+.misc_photo_link {
+  position: relative;
+}
+#lutreola_help a img,
+#gallery_img_link a img,
+.misc_photo_link a img {
   width: 100%;
+}
+#lutreola_help a position absolute,
+#gallery_img_link a position absolute,
+.misc_photo_link a position absolute {
+  top: 0;
+  left: 0;
+}
+#lutreola_help #caption,
+#gallery_img_link #caption,
+.misc_photo_link #caption {
+  position: absolute;
+  bottom: 0;
+  font-weight: bold;
+  color: #fff;
 }
 .nopad {
   padding: 0;

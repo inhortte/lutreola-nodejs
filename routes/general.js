@@ -81,7 +81,18 @@ function getNewsImages(callback) {
   app.models.news
     .find({image: {$ne: null}}, null, {sort: {_id: -1}, limit: 3},
 	  function(err, news_items) {
-	    callback(news_items);
+	    var news_images = [];
+	    app.async.forEach(news_items, function(item, callback) {
+	      news_images.push({
+		subject: item.subject
+		, image: item.image
+		, _id: item._id
+	      });
+	      callback(null);
+	    }, function(err) {
+	      console.log(JSON.stringify(news_images));
+	      callback(news_images);
+	    });
 	  });
 }
 exports.getNewsImages = getNewsImages;
